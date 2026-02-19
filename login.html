@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMART BEASISWA SULTENG — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{sulteng:{50:'#eef4fb',100:'#d5e5f5',200:'#aecaeb',300:'#79a8dd',400:'#4482cc',500:'#1a5eb8',600:'#154fa0',700:'#113f84',800:'#0d306a',900:'#092050'}},fontFamily:{display:['"DM Serif Display"','serif']}}}}</script>
+<style>
+* { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-display { font-family: 'DM Serif Display', serif; }
+body { background: linear-gradient(135deg, #0d306a 0%, #1a5eb8 55%, #2878d4 100%); min-height: 100vh; }
+
+/* Animated background blobs */
+.blob { position: fixed; border-radius: 50%; filter: blur(90px); opacity: .15; animation: drift 12s ease-in-out infinite; pointer-events: none; }
+.blob-1 { width: 500px; height: 500px; background: #fff; top: -150px; right: -150px; animation-delay: 0s; }
+.blob-2 { width: 400px; height: 400px; background: #79a8dd; bottom: -100px; left: -100px; animation-delay: -6s; }
+@keyframes drift { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(20px,20px) scale(1.05);} }
+
+/* Role cards */
+.role-card { cursor: pointer; border: 2px solid transparent; transition: all .25s; background: white; }
+.role-card:hover { border-color: #1a5eb8; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(26,94,184,.15); }
+.role-card.selected { border-color: #1a5eb8; background: #eef4fb; box-shadow: 0 0 0 4px rgba(26,94,184,.12); }
+.role-card.selected .role-icon { background: #1a5eb8; color: white; }
+
+/* Input */
+.form-input { width: 100%; padding: .6rem 1rem; border: 1.5px solid #e2e8f0; border-radius: .75rem; font-size: .875rem; outline: none; transition: border .2s, box-shadow .2s; background: #f8fafc; }
+.form-input:focus { border-color: #1a5eb8; box-shadow: 0 0 0 3px rgba(26,94,184,.1); background: white; }
+
+/* Button */
+.btn-login { width: 100%; padding: .8rem; background: linear-gradient(135deg,#0d306a,#1a5eb8); color: white; border-radius: .875rem; font-weight: 700; font-size:.95rem; letter-spacing:.02em; border: none; cursor: pointer; transition: opacity .2s, transform .2s; }
+.btn-login:hover { opacity: .92; transform: translateY(-1px); }
+.btn-login:active { transform: translateY(0); }
+.btn-login:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+
+/* Error shake */
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+.shake { animation: shake .4s ease; }
+</style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+<!-- Blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<div class="w-full max-w-md relative z-10">
+
+  <!-- Logo + Header -->
+  <div class="text-center mb-7">
+    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/20 mb-4 shadow-lg backdrop-blur-sm">
+      <span class="text-3xl">🎓</span>
+    </div>
+    <h1 class="font-display text-white text-3xl mb-1">SMART BEASISWA</h1>
+    <p class="text-blue-200 text-sm font-medium tracking-widest uppercase">Sulawesi Tengah</p>
+  </div>
+
+  <!-- Card -->
+  <div class="bg-white rounded-3xl shadow-2xl p-8">
+
+    <!-- Step 1: Pilih Peran -->
+    <div id="step-role">
+      <h2 class="font-bold text-slate-800 text-lg mb-1">Masuk sebagai</h2>
+      <p class="text-xs text-slate-400 mb-5">Pilih peran Anda untuk melanjutkan</p>
+
+      <div class="grid grid-cols-2 gap-3 mb-6" id="role-grid">
+
+        <div class="role-card rounded-2xl p-4 text-center selected" data-role="penerima" onclick="selectRole(this,'penerima')">
+          <div class="role-icon w-10 h-10 rounded-xl bg-sulteng-100 text-sulteng-600 flex items-center justify-center text-xl mx-auto mb-2 transition-all">👤</div>
+          <div class="text-sm font-semibold text-slate-700">Penerima</div>
+          <div class="text-xs text-slate-400 mt-0.5">Siswa / Mahasiswa</div>
+        </div>
+
+        <div class="role-card rounded-2xl p-4 text-center" data-role="pendaftar" onclick="selectRole(this,'pendaftar')">
+          <div class="role-icon w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-xl mx-auto mb-2 transition-all">📝</div>
+          <div class="text-sm font-semibold text-slate-700">Pendaftar</div>
+          <div class="text-xs text-slate-400 mt-0.5">Daftar beasiswa baru</div>
+        </div>
+
+        <div class="role-card rounded-2xl p-4 text-center" data-role="verifikator" onclick="selectRole(this,'verifikator')">
+          <div class="role-icon w-10 h-10 rounded-xl bg-yellow-100 text-yellow-600 flex items-center justify-center text-xl mx-auto mb-2 transition-all">✅</div>
+          <div class="text-sm font-semibold text-slate-700">Verifikator</div>
+          <div class="text-xs text-slate-400 mt-0.5">Operator / Admin</div>
+        </div>
+
+        <div class="role-card rounded-2xl p-4 text-center" data-role="pimpinan" onclick="selectRole(this,'pimpinan')">
+          <div class="role-icon w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl mx-auto mb-2 transition-all">📊</div>
+          <div class="text-sm font-semibold text-slate-700">Pimpinan</div>
+          <div class="text-xs text-slate-400 mt-0.5">Kepala Dinas / Pejabat</div>
+        </div>
+
+      </div>
+
+      <button onclick="nextStep()" class="btn-login" id="btn-next">
+        Lanjutkan →
+      </button>
+
+      <div class="mt-5 text-center">
+        <a href="index.html" class="text-xs text-slate-400 hover:text-sulteng-600 transition-colors">← Kembali ke Beranda</a>
+      </div>
+    </div>
+
+    <!-- Step 2: Form Login -->
+    <div id="step-form" class="hidden">
+
+      <!-- Role badge -->
+      <div class="flex items-center gap-2 mb-5">
+        <button onclick="backStep()" class="text-slate-400 hover:text-slate-600 transition-colors text-sm">← Ganti</button>
+        <div id="role-badge" class="flex items-center gap-2 bg-sulteng-50 border border-sulteng-100 rounded-xl px-3 py-1.5 text-sm">
+          <span id="badge-icon" class="text-base">👤</span>
+          <span id="badge-label" class="font-semibold text-sulteng-700">Penerima</span>
+        </div>
+      </div>
+
+      <h2 class="font-bold text-slate-800 text-lg mb-1">Masuk ke akun Anda</h2>
+      <p class="text-xs text-slate-400 mb-5">Gunakan NIK atau ID pengguna yang terdaftar</p>
+
+      <div id="login-form">
+
+        <!-- NIK / Username -->
+        <div class="mb-4">
+          <label class="block text-xs font-semibold text-slate-600 mb-1.5" id="nik-label">NIK / No. Identitas</label>
+          <input type="text" id="input-nik" class="form-input" placeholder="Masukkan NIK 16 digit" maxlength="20" oninput="clearError()">
+        </div>
+
+        <!-- Password -->
+        <div class="mb-5">
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="text-xs font-semibold text-slate-600">Kata Sandi</label>
+            <a href="#" class="text-xs text-sulteng-600 hover:underline">Lupa kata sandi?</a>
+          </div>
+          <div class="relative">
+            <input type="password" id="input-pass" class="form-input pr-10" placeholder="••••••••" oninput="clearError()">
+            <button type="button" onclick="togglePass()" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm">👁️</button>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div id="login-error" class="hidden mb-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-600 flex items-center gap-2">
+          <span>⚠️</span><span id="error-text">Kredensial tidak valid.</span>
+        </div>
+
+        <!-- Submit -->
+        <button onclick="doLogin()" class="btn-login" id="btn-login">
+          <span id="btn-text">Masuk</span>
+        </button>
+      </div>
+
+      <!-- Demo Credentials -->
+      <div class="mt-5 bg-slate-50 rounded-2xl p-4 border border-slate-100">
+        <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Demo Kredensial</div>
+        <div id="demo-creds" class="space-y-1.5 text-xs text-slate-500">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Loading / Success -->
+    <div id="step-loading" class="hidden text-center py-8">
+      <div class="inline-flex flex-col items-center gap-3">
+        <div class="w-14 h-14 rounded-full bg-sulteng-50 flex items-center justify-center text-3xl" id="loading-icon">⌛</div>
+        <div class="font-semibold text-slate-700 text-base" id="loading-text">Memverifikasi...</div>
+        <div class="text-xs text-slate-400" id="loading-sub">Mohon tunggu sebentar</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <p class="text-center text-blue-200/60 text-xs mt-6">© 2026 Pemerintah Provinsi Sulawesi Tengah — Dinas Pendidikan &amp; Kebudayaan</p>
+</div>
+
+<script>
+const ROLES = {
+  penerima:    { icon:'👤', label:'Penerima',    nik:'7201xxxxxxxxxxxx', pass:'penerima123', dest:'dashboard-penerima.html' },
+  pendaftar:   { icon:'📝', label:'Pendaftar',   nik:'NIK Anda',         pass:'pendaftar123', dest:'daftar.html' },
+  verifikator: { icon:'✅', label:'Verifikator', nik:'andi.saleh',       pass:'verif2026',    dest:'verifikator.html' },
+  pimpinan:    { icon:'📊', label:'Pimpinan',    nik:'pimpinan.sulteng', pass:'pimpinan2026', dest:'dashboard-pimpinan.html' },
+};
+
+let currentRole = 'penerima';
+
+function selectRole(el, role) {
+  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentRole = role;
+}
+
+function nextStep() {
+  const r = ROLES[currentRole];
+  document.getElementById('step-role').classList.add('hidden');
+  document.getElementById('step-form').classList.remove('hidden');
+  document.getElementById('badge-icon').textContent = r.icon;
+  document.getElementById('badge-label').textContent = r.label;
+
+  // Label tweak per role
+  const nikLabel = document.getElementById('nik-label');
+  const nikInput = document.getElementById('input-nik');
+  if (currentRole === 'verifikator' || currentRole === 'pimpinan') {
+    nikLabel.textContent = 'ID Pengguna';
+    nikInput.placeholder = 'Masukkan ID Pengguna';
+    nikInput.removeAttribute('maxlength');
+  } else {
+    nikLabel.textContent = 'NIK / No. Identitas';
+    nikInput.placeholder = 'Masukkan NIK 16 digit';
+    nikInput.maxLength = 20;
+  }
+
+  // Demo creds
+  const dc = document.getElementById('demo-creds');
+  dc.innerHTML = `
+    <div class="flex justify-between"><span class="text-slate-400">${nikLabel.textContent}:</span><span class="font-mono font-medium text-slate-600 cursor-pointer hover:text-sulteng-600" onclick="fillDemo('nik','${r.nik}')">${r.nik}</span></div>
+    <div class="flex justify-between"><span class="text-slate-400">Kata Sandi:</span><span class="font-mono font-medium text-slate-600 cursor-pointer hover:text-sulteng-600" onclick="fillDemo('pass','${r.pass}')">${r.pass}</span></div>
+    <div class="text-slate-400 mt-1">💡 Klik nilai di atas untuk mengisi otomatis</div>`;
+}
+
+function backStep() {
+  document.getElementById('step-form').classList.add('hidden');
+  document.getElementById('step-role').classList.remove('hidden');
+  clearError();
+}
+
+function fillDemo(field, val) {
+  document.getElementById('input-' + field).value = val;
+  clearError();
+}
+
+function clearError() {
+  document.getElementById('login-error').classList.add('hidden');
+}
+
+function togglePass() {
+  const f = document.getElementById('input-pass');
+  f.type = f.type === 'password' ? 'text' : 'password';
+}
+
+function doLogin() {
+  const nik  = document.getElementById('input-nik').value.trim();
+  const pass = document.getElementById('input-pass').value.trim();
+  const r    = ROLES[currentRole];
+  const btn  = document.getElementById('btn-login');
+
+  if (!nik || !pass) {
+    showError('NIK / ID Pengguna dan kata sandi tidak boleh kosong.');
+    return;
+  }
+
+  // Very simple demo check — any input accepted OR match demo creds
+  const valid = (nik.length >= 5 && pass.length >= 5);
+  if (!valid) {
+    showError('NIK / ID minimal 5 karakter dan kata sandi minimal 5 karakter.');
+    return;
+  }
+
+  // Show loading
+  btn.disabled = true;
+  document.getElementById('step-form').classList.add('hidden');
+  document.getElementById('step-loading').classList.remove('hidden');
+
+  setTimeout(() => {
+    document.getElementById('loading-icon').textContent = '✅';
+    document.getElementById('loading-text').textContent = `Selamat datang, ${r.label}!`;
+    document.getElementById('loading-sub').textContent = 'Mengalihkan ke dashboard...';
+    setTimeout(() => { window.location.href = r.dest; }, 900);
+  }, 1400);
+}
+
+function showError(msg) {
+  const el = document.getElementById('login-error');
+  document.getElementById('error-text').textContent = msg;
+  el.classList.remove('hidden');
+  document.getElementById('login-form').classList.add('shake');
+  setTimeout(() => document.getElementById('login-form').classList.remove('shake'), 500);
+}
+</script>
+</body>
+</html>
