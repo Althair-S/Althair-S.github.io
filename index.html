@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMART BEASISWA SULTENG — Beranda</title>
+<meta name="description" content="Sistem Manajemen & Integrasi Data Beasiswa Provinsi Sulawesi Tengah. Terintegrasi dengan Program Berani Cerdas.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        sulteng: {
+          50: '#eef4fb', 100: '#d5e5f5', 200: '#aecaeb', 300: '#79a8dd',
+          400: '#4482cc', 500: '#1a5eb8', 600: '#154fa0', 700: '#113f84',
+          800: '#0d306a', 900: '#092050',
+        }
+      },
+      fontFamily: {
+        display: ['"DM Serif Display"', 'serif'],
+        body: ['"Plus Jakarta Sans"', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .font-display { font-family: 'DM Serif Display', serif; }
+  .hero-gradient { background: linear-gradient(135deg, #0d306a 0%, #1a5eb8 45%, #2878d4 100%); }
+  @keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 rgba(34,197,94,.4); }
+    70% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+    100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+  }
+  .badge-active { animation: pulse-ring 2s infinite; }
+  .stat-card { transition: transform .2s, box-shadow .2s; }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.12); }
+  .progress-bar { transition: width 1.2s ease; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f1f5f9; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp .6s ease both; }
+  .fade-up-2 { animation: fadeUp .6s .15s ease both; }
+  .fade-up-3 { animation: fadeUp .6s .3s ease both; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+<!-- ====== NAVBAR ====== -->
+<nav class="hero-gradient text-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+      <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+        <span class="text-sulteng-700 font-black text-lg">S</span>
+      </div>
+      <div>
+        <div class="font-display text-lg leading-tight">SMART BEASISWA</div>
+        <div class="text-xs text-blue-200 tracking-widest uppercase">Sulawesi Tengah</div>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html" class="px-3 py-2 rounded-lg bg-white/20 text-white font-semibold">🏠 Beranda</a>
+      <a href="daftar.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">📝 Pendaftaran</a>
+      <a href="dashboard-penerima.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">👤 Portal Penerima</a>
+      <a href="verifikator.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">✅ Verifikator</a>
+      <a href="dashboard-pimpinan.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">📊 Dashboard Pimpinan</a>
+    </div>
+    <!-- Mobile: hamburger dropdown -->
+    <div class="md:hidden relative" id="mob-menu-wrap">
+      <button onclick="toggleMob()" class="text-xs bg-white/20 px-3 py-1.5 rounded-md flex items-center gap-1">☰ Menu</button>
+      <div id="mob-menu" class="hidden absolute right-0 top-10 bg-sulteng-800 rounded-xl shadow-xl overflow-hidden min-w-[180px] z-50 text-sm">
+        <a href="index.html" class="flex items-center gap-2 px-4 py-3 text-white bg-white/10 font-semibold">🏠 Beranda</a>
+        <a href="daftar.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📝 Pendaftaran</a>
+        <a href="dashboard-penerima.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">👤 Portal Penerima</a>
+        <a href="verifikator.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">✅ Verifikator</a>
+        <a href="dashboard-pimpinan.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📊 Dashboard Pimpinan</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== HERO ====== -->
+<div class="hero-gradient text-white py-24 px-4 relative overflow-hidden">
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute top-10 right-10 w-72 h-72 rounded-full bg-white"></div>
+    <div class="absolute -bottom-24 -left-12 w-96 h-96 rounded-full bg-blue-300"></div>
+  </div>
+  <div class="max-w-5xl mx-auto relative z-10 text-center">
+    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm mb-6 fade-up">
+      <span class="w-2 h-2 bg-green-400 rounded-full badge-active"></span>
+      Pendaftaran Beasiswa 2026 Dibuka
+    </div>
+    <h1 class="font-display text-5xl md:text-6xl mb-3 leading-tight fade-up-2">
+      SMART BEASISWA<br><span class="italic text-blue-200">SULTENG</span>
+    </h1>
+    <p class="text-blue-100 max-w-2xl mx-auto mb-2 text-base fade-up-2">
+      Sistem Manajemen &amp; Integrasi Data Beasiswa Provinsi Sulawesi Tengah
+    </p>
+    <p class="text-blue-200/80 max-w-xl mx-auto mb-10 text-sm fade-up-2">
+      Terintegrasi dengan Program <strong class="text-white">Berani Cerdas</strong> — Platform end-to-end transparan berbasis data untuk pengelolaan beasiswa Pemprov Sulawesi Tengah.
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center fade-up-3">
+      <a href="daftar.html" class="bg-white text-sulteng-700 font-bold px-8 py-4 rounded-xl hover:bg-blue-50 shadow-lg transition-all hover:-translate-y-1 inline-flex items-center gap-2">
+        ✦ Daftar Akun
+      </a>
+      <a href="dashboard-penerima.html" class="border-2 border-white/60 text-white font-semibold px-8 py-4 rounded-xl hover:bg-white/10 transition-all inline-flex items-center gap-2">
+        Cek Status Pendaftaran →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ====== KUOTA 2026 ====== -->
+<div id="kuota" class="max-w-5xl mx-auto -mt-12 px-4 relative z-10">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="stat-card bg-white rounded-2xl p-7 shadow-lg border border-slate-100">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-xs text-sulteng-500 font-semibold uppercase tracking-widest mb-1">Informasi Kuota</div>
+          <div class="text-5xl font-black text-sulteng-700">8.000</div>
+          <div class="font-semibold text-slate-700 mt-1">Kuota Mahasiswa</div>
+          <div class="text-sm text-slate-400 mt-1">Tahun Anggaran 2026</div>
+        </div>
+        <div class="text-4xl">🎓</div>
+      </div>
+      <div class="mt-3">
+        <div class="flex justify-between text-xs text-slate-500 mb-1.5"><span>Terdaftar</span><span>5.482 / 8.000</span></div>
+        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+          <div class="progress-bar h-full bg-sulteng-500 rounded-full" style="width:69%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="stat-card bg-white rounded-2xl p-7 shadow-lg border border-slate-100">
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="text-xs text-sulteng-500 font-semibold uppercase tracking-widest mb-1">Informasi Kuota</div>
+          <div class="text-5xl font-black text-sulteng-700">4.500</div>
+          <div class="font-semibold text-slate-700 mt-1">Kuota Siswa SMA/SMK</div>
+          <div class="text-sm text-slate-400 mt-1">Tahun Anggaran 2026</div>
+        </div>
+        <div class="text-4xl">📚</div>
+      </div>
+      <div class="mt-3">
+        <div class="flex justify-between text-xs text-slate-500 mb-1.5"><span>Terdaftar</span><span>2.891 / 4.500</span></div>
+        <div class="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+          <div class="progress-bar h-full bg-sulteng-400 rounded-full" style="width:64%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== ALUR PENDAFTAR ====== -->
+<div class="max-w-5xl mx-auto px-4 py-20">
+  <div class="text-center mb-12">
+    <div class="text-xs text-sulteng-500 font-semibold uppercase tracking-widest mb-2">Cara Mendaftar</div>
+    <h2 class="font-display text-3xl text-slate-800">Alur Pendaftar (Mahasiswa)</h2>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative">
+      <div class="w-10 h-10 bg-sulteng-600 text-white rounded-xl flex items-center justify-center font-bold text-lg mb-4">1</div>
+      <h3 class="font-bold text-slate-800 mb-2">Registrasi Akun</h3>
+      <ul class="text-sm text-slate-500 space-y-1.5">
+        <li class="flex gap-2"><span class="text-sulteng-400">•</span> NIK (validasi Dukcapil)</li>
+        <li class="flex gap-2"><span class="text-sulteng-400">•</span> NISN / NIM</li>
+        <li class="flex gap-2"><span class="text-sulteng-400">•</span> Email &amp; No. HP</li>
+        <li class="flex gap-2"><span class="text-sulteng-400">•</span> Password</li>
+      </ul>
+      <div class="mt-4 text-xs text-blue-600 bg-blue-50 rounded-lg px-3 py-2">
+        🔄 Validasi otomatis: cek duplikasi &amp; status aktif
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative">
+      <div class="w-10 h-10 bg-sulteng-600 text-white rounded-xl flex items-center justify-center font-bold text-lg mb-4">2</div>
+      <h3 class="font-bold text-slate-800 mb-2">Unggah Dokumen</h3>
+      <ul class="text-sm text-slate-500 space-y-1.5">
+        <li class="flex gap-2"><span class="text-green-400">✔</span> KTP / Kartu Pelajar</li>
+        <li class="flex gap-2"><span class="text-green-400">✔</span> Kartu Keluarga</li>
+        <li class="flex gap-2"><span class="text-green-400">✔</span> Surat Aktif Kuliah</li>
+        <li class="flex gap-2"><span class="text-green-400">✔</span> Transkrip Nilai</li>
+        <li class="flex gap-2"><span class="text-yellow-400">⚠</span> Surat Ket. Penghasilan</li>
+      </ul>
+    </div>
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative">
+      <div class="w-10 h-10 bg-sulteng-600 text-white rounded-xl flex items-center justify-center font-bold text-lg mb-4">3</div>
+      <h3 class="font-bold text-slate-800 mb-2">Proses Seleksi</h3>
+      <ul class="text-sm text-slate-500 space-y-1.5">
+        <li class="flex gap-2"><span class="text-sulteng-400">•</span> Penilaian IPK otomatis</li>
+        <li class="flex gap-2"><span class="text-sulteng-400">•</span> Kategori ekonomi keluarga</li>
+        <li class="flex gap-2"><span class="text-sulteng-400">•</span> Wilayah asal (Kecamatan)</li>
+        <li class="flex gap-2"><span class="text-sulteng-400">•</span> Skor &amp; rekomendasi sistem</li>
+      </ul>
+      <div class="mt-4 text-xs text-green-700 bg-green-50 rounded-lg px-3 py-2">
+        📋 Semua keputusan terekam di audit trail
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-8">
+    <a href="daftar.html" class="hero-gradient text-white font-bold px-8 py-4 rounded-xl inline-flex items-center gap-2 hover:opacity-90 transition shadow-md">
+      Mulai Pendaftaran →
+    </a>
+  </div>
+</div>
+
+<!-- ====== FITUR UNGGULAN ====== -->
+<div id="fitur" class="bg-white py-20 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-12">
+      <div class="text-xs text-sulteng-500 font-semibold uppercase tracking-widest mb-2">Platform</div>
+      <h2 class="font-display text-3xl text-slate-800">Fitur Unggulan</h2>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+      <div class="text-center p-6 rounded-2xl bg-slate-50 hover:bg-sulteng-50 hover:shadow-md transition-all cursor-default">
+        <div class="text-4xl mb-3">🔄</div>
+        <div class="font-semibold text-slate-700 text-sm">Validasi Dukcapil Real-time</div>
+        <p class="text-xs text-slate-400 mt-2">Sinkronisasi data NIK otomatis</p>
+      </div>
+      <div class="text-center p-6 rounded-2xl bg-slate-50 hover:bg-sulteng-50 hover:shadow-md transition-all cursor-default">
+        <div class="text-4xl mb-3">📊</div>
+        <div class="font-semibold text-slate-700 text-sm">Dashboard Analitik Interaktif</div>
+        <p class="text-xs text-slate-400 mt-2">Data real-time &amp; dinamis</p>
+      </div>
+      <div class="text-center p-6 rounded-2xl bg-slate-50 hover:bg-sulteng-50 hover:shadow-md transition-all cursor-default">
+        <div class="text-4xl mb-3">🔔</div>
+        <div class="font-semibold text-slate-700 text-sm">Early Warning System (EWS)</div>
+        <p class="text-xs text-slate-400 mt-2">Peringatan IPK &amp; keaktifan</p>
+      </div>
+      <div class="text-center p-6 rounded-2xl bg-slate-50 hover:bg-sulteng-50 hover:shadow-md transition-all cursor-default">
+        <div class="text-4xl mb-3">🎓</div>
+        <div class="font-semibold text-slate-700 text-sm">Tracking Alumni Pasca-Studi</div>
+        <p class="text-xs text-slate-400 mt-2">Pantau kontribusi ke daerah</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PERBANDINGAN SISTEM ====== -->
+<div class="max-w-5xl mx-auto px-4 py-20">
+  <div class="text-center mb-10">
+    <div class="text-xs text-sulteng-500 font-semibold uppercase tracking-widest mb-2">Keunggulan</div>
+    <h2 class="font-display text-3xl text-slate-800">Perbedaan dengan Sistem Lama</h2>
+  </div>
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="grid grid-cols-3 text-sm">
+      <div class="bg-slate-50 px-5 py-4 font-semibold text-slate-500 uppercase text-xs tracking-wider">Aspek</div>
+      <div class="bg-slate-100 px-5 py-4 font-semibold text-slate-500 uppercase text-xs tracking-wider text-center">Sistem Lama</div>
+      <div class="hero-gradient px-5 py-4 font-semibold text-white uppercase text-xs tracking-wider text-center">SMART BEASISWA SULTENG</div>
+    </div>
+    <div class="divide-y divide-slate-100">
+      <div class="grid grid-cols-3 text-sm hover:bg-slate-50 transition-colors">
+        <div class="px-5 py-4 text-slate-600 font-medium">Cakupan</div>
+        <div class="px-5 py-4 text-slate-500 text-center">Fokus pendaftaran</div>
+        <div class="px-5 py-4 text-sulteng-700 font-semibold text-center">End-to-end system</div>
+      </div>
+      <div class="grid grid-cols-3 text-sm hover:bg-slate-50 transition-colors">
+        <div class="px-5 py-4 text-slate-600 font-medium">Data</div>
+        <div class="px-5 py-4 text-slate-500 text-center">Statis</div>
+        <div class="px-5 py-4 text-sulteng-700 font-semibold text-center">Dinamis &amp; real-time</div>
+      </div>
+      <div class="grid grid-cols-3 text-sm hover:bg-slate-50 transition-colors">
+        <div class="px-5 py-4 text-slate-600 font-medium">Alumni</div>
+        <div class="px-5 py-4 text-center"><span class="text-red-400">✕</span> Tidak ada</div>
+        <div class="px-5 py-4 text-center"><span class="text-green-500">✓</span> <span class="text-sulteng-700 font-semibold">Ada alumni tracking</span></div>
+      </div>
+      <div class="grid grid-cols-3 text-sm hover:bg-slate-50 transition-colors">
+        <div class="px-5 py-4 text-slate-600 font-medium">Monitoring</div>
+        <div class="px-5 py-4 text-slate-500 text-center">Manual</div>
+        <div class="px-5 py-4 text-sulteng-700 font-semibold text-center">Dashboard analitik</div>
+      </div>
+      <div class="grid grid-cols-3 text-sm hover:bg-slate-50 transition-colors">
+        <div class="px-5 py-4 text-slate-600 font-medium">Early Warning</div>
+        <div class="px-5 py-4 text-center"><span class="text-red-400">✕</span> Tidak ada</div>
+        <div class="px-5 py-4 text-center"><span class="text-green-500">✓</span> <span class="text-sulteng-700 font-semibold">Ada sistem peringatan</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<footer class="bg-sulteng-900 text-blue-200 py-10 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-sulteng-700 font-black text-sm">S</span>
+          </div>
+          <div class="font-display text-white text-base">SMART BEASISWA SULTENG</div>
+        </div>
+        <p class="text-xs text-blue-300 leading-relaxed">Sistem Manajemen &amp; Integrasi Data Beasiswa Provinsi Sulawesi Tengah. Terintegrasi dengan Program Berani Cerdas.</p>
+      </div>
+      <div>
+        <p class="text-xs text-blue-400 uppercase tracking-wider font-semibold mb-3">Portal</p>
+        <div class="space-y-2 text-sm">
+          <div><a href="daftar.html" class="hover:text-white transition-colors">Pendaftaran</a></div>
+          <div><a href="dashboard-penerima.html" class="hover:text-white transition-colors">Portal Penerima</a></div>
+          <div><a href="verifikator.html" class="hover:text-white transition-colors">Panel Verifikator</a></div>
+          <div><a href="dashboard-pimpinan.html" class="hover:text-white transition-colors">Dashboard Pimpinan</a></div>
+        </div>
+      </div>
+      <div>
+        <p class="text-xs text-blue-400 uppercase tracking-wider font-semibold mb-3">Kontak</p>
+        <div class="text-sm space-y-2">
+          <p>Biro Pemerintahan &amp; Kesejahteraan Rakyat</p>
+          <p>Pemerintah Provinsi Sulawesi Tengah</p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-blue-900 pt-6 text-center text-xs text-blue-400">
+      © 2026 Pemerintah Provinsi Sulawesi Tengah — Biro Pemerintahan &amp; Kesejahteraan Rakyat
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.progress-bar').forEach(b => {
+      const w = b.style.width;
+      b.style.width = '0';
+      setTimeout(() => b.style.width = w, 100);
+    });
+  }, 400);
+});
+function toggleMob() {
+  const m = document.getElementById('mob-menu');
+  if (m) m.classList.toggle('hidden');
+}
+document.addEventListener('click', e => {
+  const m = document.getElementById('mob-menu');
+  if (m && !m.contains(e.target) && !e.target.closest('button[onclick="toggleMob()"]')) m.classList.add('hidden');
+});
+</script>
+</body>
+</html>

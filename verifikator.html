@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMART BEASISWA SULTENG — Panel Verifikator</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{sulteng:{50:'#eef4fb',100:'#d5e5f5',200:'#aecaeb',300:'#79a8dd',400:'#4482cc',500:'#1a5eb8',600:'#154fa0',700:'#113f84',800:'#0d306a',900:'#092050'}},fontFamily:{display:['"DM Serif Display"','serif']}}}}</script>
+<style>
+* { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-display { font-family: 'DM Serif Display', serif; }
+.hero-gradient { background: linear-gradient(135deg, #0d306a 0%, #1a5eb8 45%, #2878d4 100%); }
+.sub-page { display: none; }
+.sub-page.active { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+.nav-item.active { background: rgba(255,255,255,.18); border-left: 3px solid #fff; }
+tbody tr:hover { background: #f0f6ff; }
+.ews-warning { border-left: 4px solid #ef4444; }
+.ews-pending  { border-left: 4px solid #f59e0b; }
+.ews-ok       { border-left: 4px solid #22c55e; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+<div class="flex flex-col min-h-screen">
+
+<!-- GLOBAL NAVBAR -->
+<nav class="hero-gradient text-white shadow-md sticky top-0 z-50">
+  <div class="px-6 py-3 flex items-center justify-between">
+    <a href="index.html" class="font-display text-base tracking-wide flex-shrink-0">SMART BEASISWA SULTENG</a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100">🏠 Beranda</a>
+      <a href="daftar.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100">📝 Pendaftaran</a>
+      <a href="dashboard-penerima.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100">👤 Portal Penerima</a>
+      <a href="verifikator.html" class="px-3 py-2 rounded-lg bg-white/20 text-white font-semibold">✅ Verifikator</a>
+      <a href="dashboard-pimpinan.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100">📊 Dashboard Pimpinan</a>
+    </div>
+    <div class="md:hidden relative">
+      <button onclick="toggleMob()" class="text-xs bg-white/20 px-3 py-1.5 rounded-md">☰ Menu</button>
+      <div id="mob-menu" class="hidden absolute right-0 top-10 bg-sulteng-800 rounded-xl shadow-xl min-w-[180px] z-50 text-sm overflow-hidden">
+        <a href="index.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">🏠 Beranda</a>
+        <a href="daftar.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📝 Pendaftaran</a>
+        <a href="dashboard-penerima.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">👤 Portal Penerima</a>
+        <a href="verifikator.html" class="flex gap-2 px-4 py-3 text-white bg-white/10 font-semibold">✅ Verifikator</a>
+        <a href="dashboard-pimpinan.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📊 Dashboard Pimpinan</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="flex flex-1">
+<!-- SIDEBAR -->
+<aside class="w-60 bg-slate-800 text-white flex-shrink-0 hidden md:flex flex-col">
+  <div class="p-5 border-b border-slate-700">
+    <div class="font-display text-sm text-slate-200">Panel Verifikator</div>
+    <div class="text-xs text-slate-400 mt-1">Andi Saleh — Verifikator Provinsi</div>
+  </div>
+  <nav class="p-3 space-y-1 text-sm flex-1" id="sidebar-nav">
+    <button onclick="showSub('antrian')" data-key="antrian" class="nav-item active w-full text-left px-4 py-2.5 rounded-lg text-white">📋 Antrian Seleksi <span class="ml-1 bg-sulteng-500 text-white text-xs px-1.5 py-0.5 rounded-full">28</span></button>
+    <button onclick="showSub('disetujui')" data-key="disetujui" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700">✅ Disetujui <span class="ml-1 bg-green-700 text-white text-xs px-1.5 py-0.5 rounded-full">142</span></button>
+    <button onclick="showSub('ditolak')" data-key="ditolak" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700">❌ Ditolak <span class="ml-1 bg-red-700 text-white text-xs px-1.5 py-0.5 rounded-full">18</span></button>
+    <button onclick="showSub('pending')" data-key="pending" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700">⏳ Pending <span class="ml-1 bg-yellow-600 text-white text-xs px-1.5 py-0.5 rounded-full">9</span></button>
+    <button onclick="showSub('ews')" data-key="ews" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700">⚠️ Early Warning</button>
+    <button onclick="showSub('laporan')" data-key="laporan" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-700">📊 Laporan</button>
+    <hr class="border-slate-700 my-2">
+    <a href="index.html" class="block px-4 py-2.5 text-slate-400 text-sm hover:bg-slate-700 rounded-lg">← Keluar</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 overflow-auto bg-slate-50 p-6">
+
+<!-- ===== SUB: ANTRIAN ===== -->
+<div id="sub-antrian" class="sub-page active">
+  <div class="flex items-center justify-between mb-5">
+    <div><h1 class="text-xl font-bold">Antrian Seleksi Pendaftar</h1><p class="text-sm text-slate-500">28 pendaftar menunggu verifikasi</p></div>
+    <div class="flex gap-2">
+      <select class="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white">
+        <option>Semua Jenis</option><option>SMA/SMK</option><option>S1</option><option>S2/S3</option>
+      </select>
+      <select class="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white">
+        <option>Semua Kab/Kota</option><option>Palu</option><option>Poso</option><option>Banggai</option><option>Morowali</option>
+      </select>
+    </div>
+  </div>
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-5">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 border-b border-slate-200">
+          <tr>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Nama / NIK</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Jenis</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Wilayah</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase">IPK/Nilai</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Skor</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Ekonomi</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-slate-500 uppercase">Aksi</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100" id="tbl-antrian">
+          <tr id="tr-0" class="bg-sulteng-50">
+            <td class="px-5 py-4"><div class="font-semibold">Ahmad Fauzi</div><div class="text-xs text-slate-400">7201xxxxxxxxxxxx</div><div class="text-xs text-sulteng-500 font-medium">UNTAD — Lore Utara</div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">S1</span></td>
+            <td class="px-5 py-4 text-slate-600">Lore Utara<br><span class="text-xs text-slate-400">Poso</span></td>
+            <td class="px-5 py-4 font-bold text-sulteng-600">3.45</td>
+            <td class="px-5 py-4"><div class="flex items-center gap-2"><div class="h-2 w-16 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-500 rounded-full" style="width:72%"></div></div><span class="font-bold text-sulteng-600">72</span></div><div class="text-xs text-slate-400">Layak</div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">Rentan</span></td>
+            <td class="px-5 py-4"><div class="flex gap-1"><button onclick="decide('tr-0','Disetujui')" class="bg-green-600 text-white text-xs px-2 py-1.5 rounded-lg hover:bg-green-700">✓</button><button onclick="decide('tr-0','Pending')" class="bg-yellow-500 text-white text-xs px-2 py-1.5 rounded-lg hover:bg-yellow-600">⏳</button><button onclick="decide('tr-0','Ditolak')" class="bg-red-500 text-white text-xs px-2 py-1.5 rounded-lg hover:bg-red-600">✕</button></div></td>
+          </tr>
+          <tr id="tr-1">
+            <td class="px-5 py-4"><div class="font-semibold">Riska Amalia</div><div class="text-xs text-slate-400">7201yxxxxxxxxxxx</div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">S1</span></td>
+            <td class="px-5 py-4 text-slate-600">Palu</td>
+            <td class="px-5 py-4 font-bold text-sulteng-600">3.85</td>
+            <td class="px-5 py-4"><div class="flex items-center gap-2"><div class="h-2 w-16 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-green-500 rounded-full" style="width:88%"></div></div><span class="font-bold text-green-600">88</span></div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">Kurang Mampu</span></td>
+            <td class="px-5 py-4"><div class="flex gap-1"><button onclick="decide('tr-1','Disetujui')" class="bg-green-600 text-white text-xs px-2 py-1.5 rounded-lg">✓</button><button onclick="decide('tr-1','Pending')" class="bg-yellow-500 text-white text-xs px-2 py-1.5 rounded-lg">⏳</button><button onclick="decide('tr-1','Ditolak')" class="bg-red-500 text-white text-xs px-2 py-1.5 rounded-lg">✕</button></div></td>
+          </tr>
+          <tr id="tr-2">
+            <td class="px-5 py-4"><div class="font-semibold">Budi Santoso</div><div class="text-xs text-slate-400">7202xxxxxxxxxxxx</div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">S2</span></td>
+            <td class="px-5 py-4 text-slate-600">Banggai</td>
+            <td class="px-5 py-4 font-bold text-sulteng-600">3.60</td>
+            <td class="px-5 py-4"><div class="flex items-center gap-2"><div class="h-2 w-16 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-500 rounded-full" style="width:75%"></div></div><span class="font-bold text-sulteng-600">75</span></div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">Menengah</span></td>
+            <td class="px-5 py-4"><div class="flex gap-1"><button onclick="decide('tr-2','Disetujui')" class="bg-green-600 text-white text-xs px-2 py-1.5 rounded-lg">✓</button><button onclick="decide('tr-2','Pending')" class="bg-yellow-500 text-white text-xs px-2 py-1.5 rounded-lg">⏳</button><button onclick="decide('tr-2','Ditolak')" class="bg-red-500 text-white text-xs px-2 py-1.5 rounded-lg">✕</button></div></td>
+          </tr>
+          <tr id="tr-3">
+            <td class="px-5 py-4"><div class="font-semibold">Siti Rahma</div><div class="text-xs text-slate-400">7203xxxxxxxxxxxx</div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">S1</span></td>
+            <td class="px-5 py-4 text-slate-600">Poso</td>
+            <td class="px-5 py-4 font-bold text-sulteng-600">3.42</td>
+            <td class="px-5 py-4"><div class="flex items-center gap-2"><div class="h-2 w-16 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-yellow-500 rounded-full" style="width:62%"></div></div><span class="font-bold text-yellow-600">62</span></div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">Kurang Mampu</span></td>
+            <td class="px-5 py-4"><div class="flex gap-1"><button onclick="decide('tr-3','Disetujui')" class="bg-green-600 text-white text-xs px-2 py-1.5 rounded-lg">✓</button><button onclick="decide('tr-3','Pending')" class="bg-yellow-500 text-white text-xs px-2 py-1.5 rounded-lg">⏳</button><button onclick="decide('tr-3','Ditolak')" class="bg-red-500 text-white text-xs px-2 py-1.5 rounded-lg">✕</button></div></td>
+          </tr>
+          <tr id="tr-4">
+            <td class="px-5 py-4"><div class="font-semibold">Yusuf Hakim</div><div class="text-xs text-slate-400">7204xxxxxxxxxxxx</div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">SMA</span></td>
+            <td class="px-5 py-4 text-slate-600">Morowali</td>
+            <td class="px-5 py-4 font-bold text-sulteng-600">88.5</td>
+            <td class="px-5 py-4"><div class="flex items-center gap-2"><div class="h-2 w-16 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-500 rounded-full" style="width:79%"></div></div><span class="font-bold text-sulteng-600">79</span></div></td>
+            <td class="px-5 py-4"><span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">Kurang Mampu</span></td>
+            <td class="px-5 py-4"><div class="flex gap-1"><button onclick="decide('tr-4','Disetujui')" class="bg-green-600 text-white text-xs px-2 py-1.5 rounded-lg">✓</button><button onclick="decide('tr-4','Pending')" class="bg-yellow-500 text-white text-xs px-2 py-1.5 rounded-lg">⏳</button><button onclick="decide('tr-4','Ditolak')" class="bg-red-500 text-white text-xs px-2 py-1.5 rounded-lg">✕</button></div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Audit Trail -->
+  <div class="bg-white rounded-2xl shadow-sm p-5 border border-slate-100">
+    <h3 class="font-semibold text-slate-800 mb-3">📑 Audit Trail</h3>
+    <div class="text-xs font-mono space-y-2 text-slate-600 bg-slate-50 rounded-xl p-4 max-h-44 overflow-y-auto" id="audit-log">
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 09:14:22</span><span class="text-green-600 font-semibold w-14 flex-shrink-0">APPROVE</span><span>Andi Saleh → Riska Amalia (NIK: 7201yyy)</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 09:12:05</span><span class="text-yellow-600 font-semibold w-14 flex-shrink-0">PENDING</span><span>Andi Saleh → Budi Santoso — KK perlu diverifikasi</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 08:55:33</span><span class="text-red-600 font-semibold w-14 flex-shrink-0">REJECT</span><span>Fatma Wati → Dedi Kurniawan — duplikasi terdeteksi</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUB: DISETUJUI ===== -->
+<div id="sub-disetujui" class="sub-page">
+  <div class="flex items-center justify-between mb-5">
+    <div><h1 class="text-xl font-bold text-green-700">✅ Pendaftar Disetujui</h1><p class="text-sm text-slate-500">142 pendaftar telah disetujui tahun ini</p></div>
+    <button class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700">↓ Ekspor CSV</button>
+  </div>
+  <div class="grid grid-cols-3 gap-4 mb-5">
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-green-100 text-center"><div class="text-3xl font-black text-green-600">142</div><div class="text-xs text-slate-500 mt-1">Total Disetujui</div></div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-green-100 text-center"><div class="text-3xl font-black text-sulteng-600">3.61</div><div class="text-xs text-slate-500 mt-1">Rata-rata IPK</div></div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-green-100 text-center"><div class="text-3xl font-black text-blue-600">78</div><div class="text-xs text-slate-500 mt-1">Rata-rata Skor</div></div>
+  </div>
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-green-50 border-b border-green-100">
+          <tr>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Nama</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Jenis</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Wilayah</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">IPK</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Disetujui oleh</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Tanggal</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr><td class="px-5 py-3 font-semibold">Nurlita Sari</td><td class="px-5 py-3"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">S1</span></td><td class="px-5 py-3">Palu</td><td class="px-5 py-3 font-bold text-sulteng-600">3.82</td><td class="px-5 py-3 text-slate-500">Fatma Wati</td><td class="px-5 py-3 text-slate-500">19 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 font-semibold">Dian Pertiwi</td><td class="px-5 py-3"><span class="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">SMA</span></td><td class="px-5 py-3">Donggala</td><td class="px-5 py-3 font-bold text-sulteng-600">90.2</td><td class="px-5 py-3 text-slate-500">Andi Saleh</td><td class="px-5 py-3 text-slate-500">18 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 font-semibold">Hamid Talib</td><td class="px-5 py-3"><span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">S2</span></td><td class="px-5 py-3">Banggai</td><td class="px-5 py-3 font-bold text-sulteng-600">3.78</td><td class="px-5 py-3 text-slate-500">Andi Saleh</td><td class="px-5 py-3 text-slate-500">18 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 font-semibold">Ayu Wulandari</td><td class="px-5 py-3"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">S1</span></td><td class="px-5 py-3">Poso</td><td class="px-5 py-3 font-bold text-sulteng-600">3.55</td><td class="px-5 py-3 text-slate-500">Fatma Wati</td><td class="px-5 py-3 text-slate-500">17 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 font-semibold">Rizal Maulana</td><td class="px-5 py-3"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">S1</span></td><td class="px-5 py-3">Morowali</td><td class="px-5 py-3 font-bold text-sulteng-600">3.44</td><td class="px-5 py-3 text-slate-500">Andi Saleh</td><td class="px-5 py-3 text-slate-500">17 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 text-slate-400 italic" colspan="6">... 137 lainnya</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUB: DITOLAK ===== -->
+<div id="sub-ditolak" class="sub-page">
+  <div class="flex items-center justify-between mb-5">
+    <div><h1 class="text-xl font-bold text-red-700">❌ Pendaftar Ditolak</h1><p class="text-sm text-slate-500">18 pendaftar ditolak — alasan tercatat di audit trail</p></div>
+  </div>
+  <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-5 flex items-start gap-3">
+    <span class="text-yellow-500 text-xl">⚠️</span>
+    <p class="text-sm text-yellow-700">Penolakan bersifat final. Pendaftar dapat mengajukan banding ke Dinas Pendidikan Provinsi dalam 14 hari kerja.</p>
+  </div>
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-red-50 border-b border-red-100">
+          <tr>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Nama</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Jenis</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Wilayah</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Alasan Penolakan</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Ditolak oleh</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Tanggal</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr><td class="px-5 py-3 font-semibold">Dedi Kurniawan</td><td class="px-5 py-3"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">S1</span></td><td class="px-5 py-3">Palu</td><td class="px-5 py-3 text-red-600 text-xs">Duplikasi penerima aktif</td><td class="px-5 py-3 text-slate-500">Fatma Wati</td><td class="px-5 py-3 text-slate-500">19 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 font-semibold">Sari Mulyani</td><td class="px-5 py-3"><span class="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">SMA</span></td><td class="px-5 py-3">Tolitoli</td><td class="px-5 py-3 text-red-600 text-xs">Dokumen KK tidak valid</td><td class="px-5 py-3 text-slate-500">Andi Saleh</td><td class="px-5 py-3 text-slate-500">18 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 font-semibold">Hendra Laksono</td><td class="px-5 py-3"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">S1</span></td><td class="px-5 py-3">Buol</td><td class="px-5 py-3 text-red-600 text-xs">IPK di bawah 2.75 (2.50)</td><td class="px-5 py-3 text-slate-500">Andi Saleh</td><td class="px-5 py-3 text-slate-500">17 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 font-semibold">Wulan Dari</td><td class="px-5 py-3"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">S1</span></td><td class="px-5 py-3">Sigi</td><td class="px-5 py-3 text-red-600 text-xs">NIK tidak terverifikasi Dukcapil</td><td class="px-5 py-3 text-slate-500">Fatma Wati</td><td class="px-5 py-3 text-slate-500">17 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 font-semibold">Rudi Hartono</td><td class="px-5 py-3"><span class="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full">SMA</span></td><td class="px-5 py-3">Parigi M.</td><td class="px-5 py-3 text-red-600 text-xs">Kuota wilayah sudah terpenuhi</td><td class="px-5 py-3 text-slate-500">Andi Saleh</td><td class="px-5 py-3 text-slate-500">16 Feb 2026</td></tr>
+          <tr><td class="px-5 py-3 text-slate-400 italic" colspan="6">... 13 lainnya</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUB: PENDING ===== -->
+<div id="sub-pending" class="sub-page">
+  <div class="flex items-center justify-between mb-5">
+    <div><h1 class="text-xl font-bold text-yellow-700">⏳ Pending — Menunggu Kelengkapan</h1><p class="text-sm text-slate-500">9 pendaftar perlu melengkapi dokumen</p></div>
+  </div>
+  <div class="space-y-4">
+    <div class="bg-white rounded-2xl shadow-sm border border-yellow-100 p-5">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="font-semibold text-slate-800">Budi Santoso — S2, Banggai</div>
+          <div class="text-xs text-slate-500 mt-1">NIK: 7202xxxxxxxxxxxx | IPK: 3.60 | Skor: 75</div>
+          <div class="mt-3 space-y-1">
+            <div class="text-xs text-yellow-700 bg-yellow-50 rounded-lg px-3 py-2">📄 Kartu Keluarga perlu diperbarui (masa berlaku habis)</div>
+            <div class="text-xs text-yellow-700 bg-yellow-50 rounded-lg px-3 py-2">📄 Surat Keterangan Penghasilan orang tua belum diunggah</div>
+          </div>
+        </div>
+        <div class="flex gap-2 flex-shrink-0 ml-4">
+          <button class="bg-green-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-green-700">✓ Setujui</button>
+          <button class="bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-600">✕ Tolak</button>
+        </div>
+      </div>
+      <div class="mt-3 text-xs text-slate-400">Pending sejak: 12 Feb 2026 | Batas waktu: <span class="text-red-500 font-semibold">3 hari lagi</span></div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-yellow-100 p-5">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="font-semibold text-slate-800">Laila Fitri — S1, Donggala</div>
+          <div class="text-xs text-slate-500 mt-1">NIK: 7205xxxxxxxxxxxx | IPK: 3.38 | Skor: 65</div>
+          <div class="mt-3 space-y-1">
+            <div class="text-xs text-yellow-700 bg-yellow-50 rounded-lg px-3 py-2">📄 Surat Aktif Kuliah dari kampus belum diunggah</div>
+          </div>
+        </div>
+        <div class="flex gap-2 flex-shrink-0 ml-4">
+          <button class="bg-green-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-green-700">✓ Setujui</button>
+          <button class="bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-600">✕ Tolak</button>
+        </div>
+      </div>
+      <div class="mt-3 text-xs text-slate-400">Pending sejak: 14 Feb 2026 | Batas waktu: <span class="text-yellow-600 font-semibold">5 hari lagi</span></div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-yellow-100 p-5">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="font-semibold text-slate-800">Faisal Rahman — SMA, Touna</div>
+          <div class="text-xs text-slate-500 mt-1">NIK: 7206xxxxxxxxxxxx | Nilai: 87.5 | Skor: 71</div>
+          <div class="mt-3 space-y-1">
+            <div class="text-xs text-yellow-700 bg-yellow-50 rounded-lg px-3 py-2">📄 NISN tidak terdaftar di Kemendikbud — perlu klarifikasi sekolah</div>
+          </div>
+        </div>
+        <div class="flex gap-2 flex-shrink-0 ml-4">
+          <button class="bg-green-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-green-700">✓ Setujui</button>
+          <button class="bg-red-500 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-600">✕ Tolak</button>
+        </div>
+      </div>
+      <div class="mt-3 text-xs text-slate-400">Pending sejak: 15 Feb 2026 | Batas waktu: <span class="text-green-600 font-semibold">7 hari lagi</span></div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 text-sm text-slate-400 italic text-center">+ 6 pendaftar lainnya dalam status pending</div>
+  </div>
+</div>
+
+<!-- ===== SUB: EWS ===== -->
+<div id="sub-ews" class="sub-page">
+  <div class="mb-5"><h1 class="text-xl font-bold">⚠️ Early Warning System (EWS)</h1><p class="text-sm text-slate-500">Pemantauan otomatis penerima aktif — notifikasi dikirim ke mahasiswa &amp; operator kab/kota</p></div>
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="bg-red-50 border border-red-200 rounded-2xl p-5 text-center"><div class="text-3xl font-black text-red-600">2</div><div class="text-xs text-red-500 mt-1">Risiko Tinggi (IPK &lt; 2.75)</div></div>
+    <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-5 text-center"><div class="text-3xl font-black text-yellow-600">5</div><div class="text-xs text-yellow-600 mt-1">KHS Belum Upload</div></div>
+    <div class="bg-green-50 border border-green-100 rounded-2xl p-5 text-center"><div class="text-3xl font-black text-green-600">23.838</div><div class="text-xs text-green-600 mt-1">Status Aman</div></div>
+  </div>
+  <div class="space-y-4">
+    <div class="ews-warning bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex items-start justify-between">
+      <div>
+        <div class="font-semibold text-slate-800">Mahfud Ibrahim — Poso, S1 Teknik</div>
+        <div class="text-xs text-red-600 mt-1">IPK Semester 4: 2.51 — di bawah batas minimum 2.75 (2 semester berturut-turut)</div>
+        <div class="text-xs text-slate-400 mt-2">Notifikasi terakhir: 19 Feb 2026 08:30 | Status: Menunggu Respons</div>
+      </div>
+      <div class="flex flex-col gap-2 ml-4 flex-shrink-0">
+        <button class="bg-red-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-700">Kirim Peringatan</button>
+        <button class="bg-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-lg hover:bg-slate-300">Lihat Profil</button>
+      </div>
+    </div>
+    <div class="ews-warning bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex items-start justify-between">
+      <div>
+        <div class="font-semibold text-slate-800">Eko Prasetyo — Buol, S1 Pertanian</div>
+        <div class="text-xs text-red-600 mt-1">IPK Semester 2: 2.68 — di bawah batas minimum 2.75</div>
+        <div class="text-xs text-slate-400 mt-2">Notifikasi terakhir: 18 Feb 2026 14:00 | Status: Sudah Dibaca</div>
+      </div>
+      <div class="flex flex-col gap-2 ml-4 flex-shrink-0">
+        <button class="bg-red-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-red-700">Kirim Peringatan</button>
+        <button class="bg-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-lg hover:bg-slate-300">Lihat Profil</button>
+      </div>
+    </div>
+    <div class="ews-pending bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex items-start justify-between">
+      <div>
+        <div class="font-semibold text-slate-800">Dewi Kartika — Donggala, S1 Kesehatan</div>
+        <div class="text-xs text-yellow-600 mt-1">KHS Semester 5 belum diunggah — batas upload: 22 Feb 2026</div>
+        <div class="text-xs text-slate-400 mt-2">Pengingat terakhir: 17 Feb 2026 | Status: Belum Respons</div>
+      </div>
+      <div class="flex flex-col gap-2 ml-4 flex-shrink-0">
+        <button class="bg-yellow-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-700">Kirim Pengingat</button>
+        <button class="bg-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-lg hover:bg-slate-300">Lihat Profil</button>
+      </div>
+    </div>
+    <div class="ews-pending bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex items-start justify-between">
+      <div>
+        <div class="font-semibold text-slate-800">Rahmad Nur — Tolitoli, S1 Pendidikan</div>
+        <div class="text-xs text-yellow-600 mt-1">KHS Semester 3 belum diunggah — batas upload: 20 Feb 2026</div>
+        <div class="text-xs text-slate-400 mt-2">Pengingat terakhir: 15 Feb 2026 | Status: Belum Respons</div>
+      </div>
+      <div class="flex flex-col gap-2 ml-4 flex-shrink-0">
+        <button class="bg-yellow-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-yellow-700">Kirim Pengingat</button>
+        <button class="bg-slate-200 text-slate-700 text-xs px-3 py-1.5 rounded-lg hover:bg-slate-300">Lihat Profil</button>
+      </div>
+    </div>
+    <div class="ews-ok bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex items-center justify-between">
+      <div class="text-slate-400 text-sm">🟢 23.838 penerima aktif lainnya — semua persyaratan terpenuhi</div>
+      <span class="text-xs text-green-600 font-semibold">Aman</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUB: LAPORAN ===== -->
+<div id="sub-laporan" class="sub-page">
+  <div class="flex items-center justify-between mb-5">
+    <div><h1 class="text-xl font-bold">📊 Laporan Verifikasi</h1><p class="text-sm text-slate-500">Rekap kinerja tim verifikator</p></div>
+    <div class="flex gap-2">
+      <select class="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white"><option>Februari 2026</option><option>Januari 2026</option><option>All-time</option></select>
+      <button class="bg-sulteng-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-sulteng-700">↓ Unduh Laporan</button>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 text-center"><div class="text-3xl font-black text-sulteng-700">197</div><div class="text-xs text-slate-500 mt-1">Total Diproses</div></div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 text-center"><div class="text-3xl font-black text-green-600">142</div><div class="text-xs text-slate-500 mt-1">Disetujui (72%)</div></div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 text-center"><div class="text-3xl font-black text-red-600">18</div><div class="text-xs text-slate-500 mt-1">Ditolak (9%)</div></div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 text-center"><div class="text-3xl font-black text-yellow-600">37</div><div class="text-xs text-slate-500 mt-1">Belum Diproses (19%)</div></div>
+  </div>
+  <!-- Kinerja per Verifikator -->
+  <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100 mb-5">
+    <h3 class="font-semibold text-slate-800 mb-4">Kinerja per Verifikator</h3>
+    <div class="space-y-4">
+      <div class="flex items-center gap-4">
+        <div class="w-32 text-sm text-slate-700 flex-shrink-0 font-medium">Andi Saleh</div>
+        <div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-500 rounded-full" style="width:68%"></div></div>
+        <div class="text-sm font-bold text-sulteng-700 w-12 text-right">108</div>
+        <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Aktif</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="w-32 text-sm text-slate-700 flex-shrink-0 font-medium">Fatma Wati</div>
+        <div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-400 rounded-full" style="width:56%"></div></div>
+        <div class="text-sm font-bold text-sulteng-700 w-12 text-right">89</div>
+        <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Aktif</span>
+      </div>
+    </div>
+  </div>
+  <!-- Distribusi per kabupaten -->
+  <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+    <h3 class="font-semibold text-slate-800 mb-4">Distribusi Pendaftar per Kabupaten/Kota</h3>
+    <div class="space-y-3 text-sm">
+      <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Palu</div><div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-600 rounded-full" style="width:100%"></div></div><span class="font-bold text-sulteng-700 w-10 text-right">52</span></div>
+      <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Poso</div><div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-500 rounded-full" style="width:65%"></div></div><span class="font-bold text-sulteng-700 w-10 text-right">34</span></div>
+      <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Banggai</div><div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-400 rounded-full" style="width:50%"></div></div><span class="font-bold text-sulteng-700 w-10 text-right">26</span></div>
+      <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Morowali</div><div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-300 rounded-full" style="width:40%"></div></div><span class="font-bold text-sulteng-700 w-10 text-right">21</span></div>
+      <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Lainnya</div><div class="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-300 rounded-full" style="width:80%"></div></div><span class="font-bold text-slate-500 w-10 text-right">64</span></div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div><!-- end flex -->
+</div><!-- end flex-col -->
+
+<script>
+function showSub(key) {
+  document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('sub-' + key)?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector(`[data-key="${key}"]`)?.classList.add('active');
+}
+function toggleMob() {
+  const m = document.getElementById('mob-menu');
+  if (m) m.classList.toggle('hidden');
+}
+document.addEventListener('click', e => {
+  const m = document.getElementById('mob-menu');
+  if (m && !m.contains(e.target) && !e.target.closest('button[onclick="toggleMob()"]')) m.classList.add('hidden');
+});
+function decide(rowId, decision) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  const now = new Date();
+  const ts = now.toISOString().replace('T',' ').slice(0,19);
+  const colors = {Disetujui:'bg-green-50',Ditolak:'bg-red-50 opacity-60',Pending:'bg-yellow-50'};
+  const badges = {
+    Disetujui:'<span class="text-xs bg-green-100 text-green-700 px-3 py-1.5 rounded-lg font-medium">✓ Disetujui</span>',
+    Ditolak:'<span class="text-xs bg-red-100 text-red-700 px-3 py-1.5 rounded-lg font-medium">✕ Ditolak</span>',
+    Pending:'<span class="text-xs bg-yellow-100 text-yellow-700 px-3 py-1.5 rounded-lg font-medium">⏳ Pending</span>'
+  };
+  const lc = {Disetujui:'text-green-600',Ditolak:'text-red-600',Pending:'text-yellow-600'};
+  const lk = {Disetujui:'APPROVE',Ditolak:'REJECT',Pending:'PENDING'};
+  row.className = row.className.replace(/bg-\w+-\d+(\s+opacity-\d+)?/g,'').trim()+' '+(colors[decision]||'');
+  row.querySelector('td:last-child').innerHTML = badges[decision];
+  const al = document.getElementById('audit-log');
+  const d = document.createElement('div');
+  d.className='flex gap-3';
+  const nama = row.querySelector('td:first-child .font-semibold').textContent;
+  d.innerHTML=`<span class="text-slate-400 w-40 flex-shrink-0">${ts}</span><span class="${lc[decision]} font-semibold w-14 flex-shrink-0">${lk[decision]}</span><span>Andi Saleh → ${nama}</span>`;
+  al?.insertBefore(d, al.firstChild);
+}
+</script>
+</body>
+</html>

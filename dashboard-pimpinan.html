@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMART BEASISWA SULTENG — Dashboard Pimpinan</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{sulteng:{50:'#eef4fb',100:'#d5e5f5',200:'#aecaeb',300:'#79a8dd',400:'#4482cc',500:'#1a5eb8',600:'#154fa0',700:'#113f84',800:'#0d306a',900:'#092050'}},fontFamily:{display:['"DM Serif Display"','serif']}}}}</script>
+<style>
+* { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-display { font-family: 'DM Serif Display', serif; }
+.hero-gradient { background: linear-gradient(135deg, #0d306a 0%, #1a5eb8 45%, #2878d4 100%); }
+.sub-page { display: none; }
+.sub-page.active { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+.nav-item.active { background: rgba(255,255,255,.18); border-left: 3px solid #fff; }
+.stat-card { transition: transform .2s, box-shadow .2s; }
+.stat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,.08); }
+.map-dot { position: absolute; width: 13px; height: 13px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.25); cursor: pointer; transition: transform .2s; }
+.map-dot:hover { transform: scale(1.6); }
+.map-dot::after { content: attr(data-label); position: absolute; top: -28px; left: 50%; transform: translateX(-50%); background: #0d306a; color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 4px; white-space: nowrap; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.map-dot:hover::after { opacity: 1; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+</style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+<div class="flex flex-col min-h-screen">
+
+<!-- GLOBAL NAVBAR -->
+<nav class="hero-gradient text-white shadow-md sticky top-0 z-50">
+  <div class="px-6 py-3 flex items-center justify-between">
+    <a href="index.html" class="font-display text-base tracking-wide flex-shrink-0">SMART BEASISWA SULTENG</a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium">
+      <a href="index.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100">🏠 Beranda</a>
+      <a href="daftar.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100">📝 Pendaftaran</a>
+      <a href="dashboard-penerima.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100">👤 Portal Penerima</a>
+      <a href="verifikator.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100">✅ Verifikator</a>
+      <a href="dashboard-pimpinan.html" class="px-3 py-2 rounded-lg bg-white/20 text-white font-semibold">📊 Dashboard Pimpinan</a>
+    </div>
+    <div class="md:hidden relative">
+      <button onclick="toggleMob()" class="text-xs bg-white/20 px-3 py-1.5 rounded-md">☰ Menu</button>
+      <div id="mob-menu" class="hidden absolute right-0 top-10 bg-sulteng-800 rounded-xl shadow-xl min-w-[180px] z-50 text-sm overflow-hidden">
+        <a href="index.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">🏠 Beranda</a>
+        <a href="daftar.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📝 Pendaftaran</a>
+        <a href="dashboard-penerima.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">👤 Portal Penerima</a>
+        <a href="verifikator.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">✅ Verifikator</a>
+        <a href="dashboard-pimpinan.html" class="flex gap-2 px-4 py-3 text-white bg-white/10 font-semibold">📊 Dashboard Pimpinan</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="flex flex-1">
+<!-- SIDEBAR -->
+<aside class="w-60 hero-gradient text-white flex-shrink-0 hidden md:flex flex-col">
+  <div class="p-5 border-b border-white/20">
+    <div class="font-display text-sm">Dashboard Pimpinan</div>
+    <div class="text-xs text-blue-200 mt-1">Asisten Pemerintahan &amp; Kesra</div>
+  </div>
+  <nav class="p-3 space-y-1 text-sm flex-1" id="sidebar-nav">
+    <button onclick="showSub('analitik')" data-key="analitik" class="nav-item active w-full text-left px-4 py-2.5 rounded-lg text-white">📊 Analitik Provinsi</button>
+    <button onclick="showSub('peta')" data-key="peta" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-blue-100 hover:bg-white/10">🗺️ Peta Distribusi</button>
+    <button onclick="showSub('sektor')" data-key="sektor" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-blue-100 hover:bg-white/10">📈 Sektor &amp; RPJMD</button>
+    <button onclick="showSub('alumni')" data-key="alumni" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-blue-100 hover:bg-white/10">🎓 Tracking Alumni</button>
+    <button onclick="showSub('audit')" data-key="audit" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-blue-100 hover:bg-white/10">📑 Audit Trail</button>
+    <hr class="border-white/20 my-2">
+    <a href="index.html" class="block px-4 py-2.5 text-blue-200 text-sm hover:bg-white/10 rounded-lg">← Keluar</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 overflow-auto bg-slate-50 p-6">
+
+<!-- ===== SUB: ANALITIK ===== -->
+<div id="sub-analitik" class="sub-page active">
+  <div class="flex items-center justify-between mb-5">
+    <div><h1 class="text-xl font-bold">Analitik Provinsi Sulawesi Tengah</h1><p class="text-sm text-slate-500">Data real-time — SMART BEASISWA SULTENG 2026</p></div>
+    <div class="flex gap-2">
+      <select class="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white"><option>2026</option><option>2025</option><option>2024</option></select>
+      <button class="bg-sulteng-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-sulteng-700">↓ Ekspor Laporan</button>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="stat-card bg-white rounded-2xl p-5 shadow-sm border border-slate-100"><div class="text-xs text-slate-400 uppercase tracking-wider mb-1">Total Penerima Aktif</div><div class="text-3xl font-black text-sulteng-700">23.845</div><div class="text-xs text-green-500 mt-2">▲ 18.3% vs tahun lalu</div></div>
+    <div class="stat-card bg-white rounded-2xl p-5 shadow-sm border border-slate-100"><div class="text-xs text-slate-400 uppercase tracking-wider mb-1">Anggaran Terserap</div><div class="text-3xl font-black text-sulteng-700">Rp 92 M</div><div class="text-xs text-slate-400 mt-2">Tahun Anggaran 2026</div></div>
+    <div class="stat-card bg-white rounded-2xl p-5 shadow-sm border border-slate-100"><div class="text-xs text-slate-400 uppercase tracking-wider mb-1">IPK Rata-rata</div><div class="text-3xl font-black text-sulteng-700">3.28</div><div class="text-xs text-green-500 mt-2">▲ 0.06 vs semester lalu</div></div>
+    <div class="stat-card bg-white rounded-2xl p-5 shadow-sm border border-slate-100"><div class="text-xs text-slate-400 uppercase tracking-wider mb-1">Risiko Drop Out</div><div class="text-3xl font-black text-red-500">4.2%</div><div class="text-xs text-red-400 mt-2">1.001 penerima berisiko</div></div>
+  </div>
+  <!-- Charts -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+    <div class="md:col-span-2 bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+      <h3 class="font-semibold text-slate-800 mb-1">Sektor Studi</h3>
+      <p class="text-xs text-slate-400 mb-4">Pertanian 18%, Teknik 27%, Kesehatan 22%, Lainnya 33%</p>
+      <canvas id="barChart" height="150"></canvas>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+      <h3 class="font-semibold text-slate-800 mb-1">Jenis Kelamin</h3>
+      <canvas id="donutChart" height="160"></canvas>
+      <div class="flex justify-center gap-4 mt-3 text-xs text-slate-500">
+        <span><span class="inline-block w-2.5 h-2.5 rounded-full bg-sulteng-500 mr-1"></span>Perempuan 58%</span>
+        <span><span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-300 mr-1"></span>Laki-laki 42%</span>
+      </div>
+    </div>
+  </div>
+  <!-- Insight -->
+  <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+    <h3 class="font-semibold text-slate-800 mb-4">🔍 Insight Strategis</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+      <div class="bg-red-50 border border-red-100 rounded-xl p-4"><div class="font-semibold text-red-700 mb-1">Daerah IPK Rendah</div><p class="text-xs text-red-500">Touna &amp; Buol — IPK rata-rata di bawah 3.0</p></div>
+      <div class="bg-yellow-50 border border-yellow-100 rounded-xl p-4"><div class="font-semibold text-yellow-700 mb-1">Wilayah Minim Akses</div><p class="text-xs text-yellow-600">Lore Utara, Balaesang — jangkauan terbatas</p></div>
+      <div class="bg-orange-50 border border-orange-100 rounded-xl p-4"><div class="font-semibold text-orange-700 mb-1">Risiko Putus Studi</div><p class="text-xs text-orange-500">1.001 penerima (4.2%) dalam pemantauan</p></div>
+      <div class="bg-blue-50 border border-blue-100 rounded-xl p-4"><div class="font-semibold text-blue-700 mb-1">Sesuai RPJMD</div><p class="text-xs text-blue-500">Teknik 27% &amp; Kesehatan 22% — mendekati target</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUB: PETA ===== -->
+<div id="sub-peta" class="sub-page">
+  <div class="mb-5"><h1 class="text-xl font-bold">🗺️ Peta Distribusi Wilayah</h1><p class="text-sm text-slate-500">Sebaran penerima per Kabupaten/Kota di Sulawesi Tengah</p></div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+    <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+      <div class="relative bg-gradient-to-br from-blue-50 to-slate-100 rounded-xl overflow-hidden" style="height:280px">
+        <div class="absolute inset-0 flex items-center justify-center text-slate-300 text-sm">Peta Interaktif Sulawesi Tengah</div>
+        <div class="map-dot bg-sulteng-600" style="top:45%;left:35%" data-label="Palu: 4.500"></div>
+        <div class="map-dot bg-green-500" style="top:55%;left:58%" data-label="Banggai: 3.200"></div>
+        <div class="map-dot bg-yellow-500" style="top:50%;left:47%" data-label="Poso: 2.100"></div>
+        <div class="map-dot bg-purple-500" style="top:62%;left:67%" data-label="Morowali: 1.850"></div>
+        <div class="map-dot bg-red-500" style="top:38%;left:29%" data-label="Donggala: 1.420"></div>
+        <div class="map-dot bg-cyan-500" style="top:36%;left:50%" data-label="Parigi M.: 1.380"></div>
+        <div class="map-dot bg-pink-500" style="top:28%;left:25%" data-label="Tolitoli: 980"></div>
+        <div class="map-dot bg-indigo-500" style="top:22%;left:32%" data-label="Buol: 760"></div>
+        <div class="map-dot bg-teal-500" style="top:58%;left:38%" data-label="Sigi: 920"></div>
+        <div class="map-dot bg-orange-500" style="top:60%;left:55%" data-label="Poso Kota: 935"></div>
+        <div class="absolute bottom-3 right-3 bg-white/90 rounded-lg p-2 text-xs text-slate-500 space-y-1">
+          <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-sulteng-600"></div>Palu (4.500)</div>
+          <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>Banggai (3.200)</div>
+          <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>Poso (2.100)</div>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+      <h3 class="font-semibold text-slate-800 mb-4">Distribusi per Kab/Kota</h3>
+      <div class="space-y-3 text-sm">
+        <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Palu</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-600 rounded-full" style="width:100%"></div></div><div class="font-bold text-sulteng-700 w-12 text-right">4.500</div></div>
+        <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Banggai</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-500 rounded-full" style="width:71%"></div></div><div class="font-bold text-sulteng-700 w-12 text-right">3.200</div></div>
+        <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Poso</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-400 rounded-full" style="width:47%"></div></div><div class="font-bold text-sulteng-700 w-12 text-right">2.100</div></div>
+        <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Morowali</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-300 rounded-full" style="width:41%"></div></div><div class="font-bold text-sulteng-700 w-12 text-right">1.850</div></div>
+        <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Donggala</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-300 rounded-full" style="width:32%"></div></div><div class="font-bold text-sulteng-700 w-12 text-right">1.420</div></div>
+        <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Parigi M.</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-300 rounded-full" style="width:31%"></div></div><div class="font-bold text-slate-500 w-12 text-right">1.380</div></div>
+        <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Sigi</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-200 rounded-full" style="width:20%"></div></div><div class="font-bold text-slate-400 w-12 text-right">920</div></div>
+        <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Tolitoli</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-200 rounded-full" style="width:22%"></div></div><div class="font-bold text-slate-400 w-12 text-right">980</div></div>
+        <div class="flex items-center gap-3"><div class="w-28 text-slate-600 flex-shrink-0">Lainnya (5 Kab)</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-100 rounded-full" style="width:70%"></div></div><div class="font-bold text-slate-300 w-12 text-right">7.495</div></div>
+      </div>
+    </div>
+  </div>
+  <!-- Wilayah dengan IPK rendah -->
+  <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+    <h3 class="font-semibold text-slate-800 mb-4">⚠️ Wilayah Perlu Perhatian</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div class="bg-red-50 border border-red-100 rounded-xl p-4"><div class="font-semibold text-red-700">Touna</div><div class="text-xs text-red-500 mt-1">IPK Rata-rata: 2.91 — Terendah se-Provinsi</div><div class="text-xs text-slate-500 mt-1">Penerima: 480 | DO Risk: 9.2%</div></div>
+      <div class="bg-red-50 border border-red-100 rounded-xl p-4"><div class="font-semibold text-red-700">Buol</div><div class="text-xs text-red-500 mt-1">IPK Rata-rata: 2.98 — Akses internet terbatas</div><div class="text-xs text-slate-500 mt-1">Penerima: 760 | DO Risk: 7.5%</div></div>
+      <div class="bg-yellow-50 border border-yellow-100 rounded-xl p-4"><div class="font-semibold text-yellow-700">Lore Utara (Poso)</div><div class="text-xs text-yellow-600 mt-1">IPK Rata-rata: 3.05 — Wilayah terpencil</div><div class="text-xs text-slate-500 mt-1">Penerima: 123 | DO Risk: 5.1%</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUB: SEKTOR ===== -->
+<div id="sub-sektor" class="sub-page">
+  <div class="mb-5"><h1 class="text-xl font-bold">📈 Analitik Sektor Studi &amp; RPJMD</h1><p class="text-sm text-slate-500">Kesesuaian distribusi beasiswa dengan prioritas pembangunan daerah</p></div>
+  <!-- Progress target RPJMD -->
+  <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100 mb-5">
+    <h3 class="font-semibold text-slate-800 mb-4">Pencapaian Target Kuota RPJMD 2026</h3>
+    <div class="space-y-4">
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-medium text-slate-700">Teknik &amp; Industri</span><span class="text-sulteng-600 font-bold">27% / Target 30%</span></div>
+        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-500 rounded-full" style="width:90%"></div></div>
+        <div class="text-xs text-slate-400 mt-1">6.438 penerima — kurang 714 dari target</div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-medium text-slate-700">Kesehatan</span><span class="text-green-600 font-bold">22% / Target 20% ✓</span></div>
+        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-green-500 rounded-full" style="width:100%"></div></div>
+        <div class="text-xs text-slate-400 mt-1">5.246 penerima — target terlampaui</div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-medium text-slate-700">Pertanian &amp; Peternakan</span><span class="text-yellow-600 font-bold">18% / Target 25%</span></div>
+        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-yellow-500 rounded-full" style="width:72%"></div></div>
+        <div class="text-xs text-red-400 mt-1">4.292 penerima — kurang 1.669 dari target ⚠️</div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-medium text-slate-700">Pendidikan</span><span class="text-sulteng-600 font-bold">12% / Target 10% ✓</span></div>
+        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-400 rounded-full" style="width:100%"></div></div>
+        <div class="text-xs text-slate-400 mt-1">2.861 penerima — target terlampaui</div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-medium text-slate-700">Ekonomi &amp; Bisnis</span><span class="text-sulteng-600 font-bold">10% / Target 8% ✓</span></div>
+        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-300 rounded-full" style="width:100%"></div></div>
+        <div class="text-xs text-slate-400 mt-1">2.384 penerima — target terlampaui</div>
+      </div>
+      <div>
+        <div class="flex justify-between text-sm mb-1"><span class="font-medium text-slate-700">Lainnya (Hukum, Sosial, dll)</span><span class="text-slate-500 font-bold">11%</span></div>
+        <div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-300 rounded-full" style="width:50%"></div></div>
+        <div class="text-xs text-slate-400 mt-1">2.624 penerima</div>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+      <h3 class="font-semibold text-slate-800 mb-4">Rekomendasi Kebijakan</h3>
+      <div class="space-y-3 text-sm">
+        <div class="bg-red-50 rounded-xl p-3 flex items-start gap-2"><span class="text-red-500">🔴</span><p class="text-red-700">Tambah kuota beasiswa sektor <strong>Pertanian</strong> sebesar 1.700 slot — masih kurang 7% dari target RPJMD</p></div>
+        <div class="bg-yellow-50 rounded-xl p-3 flex items-start gap-2"><span class="text-yellow-500">🟡</span><p class="text-yellow-700">Perkuat sosialisasi beasiswa sektor <strong>Teknik</strong> di Kab. Poso dan Banggai</p></div>
+        <div class="bg-green-50 rounded-xl p-3 flex items-start gap-2"><span class="text-green-500">🟢</span><p class="text-green-700">Sektor <strong>Kesehatan</strong> dan <strong>Pendidikan</strong> sudah melampaui target — pertahankan</p></div>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+      <h3 class="font-semibold text-slate-800 mb-4">Tren IPK per Sektor</h3>
+      <div class="space-y-3 text-sm">
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl"><span class="font-medium">Kesehatan</span><span class="font-bold text-sulteng-600">3.52</span></div>
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl"><span class="font-medium">Teknik &amp; Industri</span><span class="font-bold text-sulteng-600">3.38</span></div>
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl"><span class="font-medium">Ekonomi &amp; Bisnis</span><span class="font-bold text-sulteng-600">3.31</span></div>
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl"><span class="font-medium">Pendidikan</span><span class="font-bold text-sulteng-600">3.29</span></div>
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl"><span class="font-medium">Pertanian &amp; Peternakan</span><span class="font-bold text-yellow-600">3.11</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUB: ALUMNI ===== -->
+<div id="sub-alumni" class="sub-page">
+  <div class="flex items-center justify-between mb-5">
+    <div><h1 class="text-xl font-bold">🎓 Tracking Alumni</h1><p class="text-sm text-slate-500">Pemantauan kontribusi alumni penerima beasiswa terhadap pembangunan daerah</p></div>
+    <button class="bg-sulteng-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-sulteng-700">↓ Ekspor Data</button>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 text-center"><div class="text-3xl font-black text-sulteng-700">1.847</div><div class="text-xs text-slate-500 mt-1">Total Alumni Terdaftar</div></div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 text-center"><div class="text-3xl font-black text-green-600">73%</div><div class="text-xs text-slate-500 mt-1">Bekerja di Sulteng</div></div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 text-center"><div class="text-3xl font-black text-blue-600">18%</div><div class="text-xs text-slate-500 mt-1">Studi Lanjut</div></div>
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 text-center"><div class="text-3xl font-black text-yellow-600">9%</div><div class="text-xs text-slate-500 mt-1">Belum Melapor</div></div>
+  </div>
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-5">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 border-b border-slate-100">
+          <tr>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Nama</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Tahun Lulus</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Status</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Bidang</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Instansi</th>
+            <th class="px-5 py-3 text-left text-xs font-semibold text-slate-500 uppercase">Lokasi</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr class="hover:bg-slate-50"><td class="px-5 py-3 font-semibold">Ahmad Fauzi</td><td class="px-5 py-3">2028</td><td class="px-5 py-3"><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Bekerja</span></td><td class="px-5 py-3">Industri</td><td class="px-5 py-3 text-slate-500">PT. Agro Sulteng</td><td class="px-5 py-3">Morowali</td></tr>
+          <tr class="hover:bg-slate-50"><td class="px-5 py-3 font-semibold">Riska Amalia</td><td class="px-5 py-3">2027</td><td class="px-5 py-3"><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Bekerja</span></td><td class="px-5 py-3">Kesehatan</td><td class="px-5 py-3 text-slate-500">Puskesmas Palu Barat</td><td class="px-5 py-3">Palu</td></tr>
+          <tr class="hover:bg-slate-50"><td class="px-5 py-3 font-semibold">Budi Santoso</td><td class="px-5 py-3">2026</td><td class="px-5 py-3"><span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Studi Lanjut</span></td><td class="px-5 py-3">Pertanian</td><td class="px-5 py-3 text-slate-500">Unhas — Riset</td><td class="px-5 py-3">Makassar</td></tr>
+          <tr class="hover:bg-slate-50"><td class="px-5 py-3 font-semibold">Nurlita Sari</td><td class="px-5 py-3">2027</td><td class="px-5 py-3"><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Bekerja</span></td><td class="px-5 py-3">Teknik</td><td class="px-5 py-3 text-slate-500">PUPR Prov. Sulteng</td><td class="px-5 py-3">Poso</td></tr>
+          <tr class="hover:bg-slate-50"><td class="px-5 py-3 font-semibold">Hamid Talib</td><td class="px-5 py-3">2025</td><td class="px-5 py-3"><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Wirausaha</span></td><td class="px-5 py-3">Pertanian</td><td class="px-5 py-3 text-slate-500">UD. Tani Jaya</td><td class="px-5 py-3">Banggai</td></tr>
+          <tr class="hover:bg-slate-50"><td class="px-5 py-3 font-semibold">Sari Cahyani</td><td class="px-5 py-3">2025</td><td class="px-5 py-3"><span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Bekerja</span></td><td class="px-5 py-3">Pendidikan</td><td class="px-5 py-3 text-slate-500">SMP N 3 Poso</td><td class="px-5 py-3">Poso</td></tr>
+          <tr class="hover:bg-slate-50"><td class="px-5 py-3 font-semibold">Dian Pertiwi</td><td class="px-5 py-3">2026</td><td class="px-5 py-3"><span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">Belum Lapor</span></td><td class="px-5 py-3">Ekonomi</td><td class="px-5 py-3 text-slate-400">—</td><td class="px-5 py-3 text-slate-400">—</td></tr>
+          <tr><td class="px-5 py-3 text-slate-400 italic" colspan="6">... 1.840 alumni lainnya</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+    <h3 class="font-semibold text-slate-800 mb-4">Distribusi Bidang Kerja Alumni</h3>
+    <div class="space-y-3 text-sm">
+      <div class="flex items-center gap-3"><div class="w-36 text-slate-600 flex-shrink-0">Pemerintahan</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-600 rounded-full" style="width:100%"></div></div><span class="text-sulteng-700 font-bold w-8 text-right">31%</span></div>
+      <div class="flex items-center gap-3"><div class="w-36 text-slate-600 flex-shrink-0">Swasta/Industri</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-500 rounded-full" style="width:74%"></div></div><span class="text-sulteng-700 font-bold w-8 text-right">23%</span></div>
+      <div class="flex items-center gap-3"><div class="w-36 text-slate-600 flex-shrink-0">Kesehatan</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-400 rounded-full" style="width:55%"></div></div><span class="text-sulteng-700 font-bold w-8 text-right">17%</span></div>
+      <div class="flex items-center gap-3"><div class="w-36 text-slate-600 flex-shrink-0">Pendidikan</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-sulteng-300 rounded-full" style="width:39%"></div></div><span class="text-sulteng-700 font-bold w-8 text-right">12%</span></div>
+      <div class="flex items-center gap-3"><div class="w-36 text-slate-600 flex-shrink-0">Wirausaha</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-300 rounded-full" style="width:32%"></div></div><span class="text-slate-500 font-bold w-8 text-right">10%</span></div>
+      <div class="flex items-center gap-3"><div class="w-36 text-slate-600 flex-shrink-0">Studi Lanjut</div><div class="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-200 rounded-full" style="width:58%"></div></div><span class="text-slate-400 font-bold w-8 text-right">18%</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUB: AUDIT ===== -->
+<div id="sub-audit" class="sub-page">
+  <div class="flex items-center justify-between mb-5">
+    <div><h1 class="text-xl font-bold">📑 Audit Trail — Log Sistem</h1><p class="text-sm text-slate-500">Semua keputusan dan aktivitas sistem tercatat secara otomatis</p></div>
+    <div class="flex gap-2">
+      <select class="border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white"><option>Semua Tipe</option><option>APPROVE</option><option>REJECT</option><option>PENDING</option><option>EWS</option><option>LOGIN</option></select>
+      <button class="bg-sulteng-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-sulteng-700">↓ Unduh Log</button>
+    </div>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 text-center"><div class="text-2xl font-black text-green-600">142</div><div class="text-xs text-slate-500 mt-1">APPROVE</div></div>
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 text-center"><div class="text-2xl font-black text-red-600">18</div><div class="text-xs text-slate-500 mt-1">REJECT</div></div>
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 text-center"><div class="text-2xl font-black text-yellow-600">9</div><div class="text-xs text-slate-500 mt-1">PENDING</div></div>
+    <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 text-center"><div class="text-2xl font-black text-blue-600">7</div><div class="text-xs text-slate-500 mt-1">EWS</div></div>
+  </div>
+  <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+    <div class="text-xs font-mono space-y-2 text-slate-600 bg-slate-50 rounded-xl p-4 max-h-[420px] overflow-y-auto">
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 09:14:22</span><span class="text-green-600 font-semibold w-14 flex-shrink-0">APPROVE</span><span>Verifikator: Andi Saleh → Riska Amalia (NIK: 7201yyy)</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 09:12:05</span><span class="text-yellow-600 font-semibold w-14 flex-shrink-0">PENDING</span><span>Verifikator: Andi Saleh → Budi Santoso — KK perlu diverifikasi</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 08:55:33</span><span class="text-red-600 font-semibold w-14 flex-shrink-0">REJECT</span><span>Verifikator: Fatma Wati → Dedi Kurniawan — duplikasi terdeteksi</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 08:47:10</span><span class="text-green-600 font-semibold w-14 flex-shrink-0">APPROVE</span><span>Verifikator: Fatma Wati → Nurlita Sari (NIK: 7205xxx)</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 08:30:00</span><span class="text-blue-600 font-semibold w-14 flex-shrink-0">EWS</span><span>Sistem → Notifikasi IPK rendah dikirim ke Mahfud Ibrahim (Poso)</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 08:15:22</span><span class="text-blue-600 font-semibold w-14 flex-shrink-0">EWS</span><span>Sistem → Notifikasi KHS belum upload ke operator Kab. Donggala</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-19 08:00:00</span><span class="text-slate-500 font-semibold w-14 flex-shrink-0">LOGIN</span><span>User: Andi Saleh — Verifikator Provinsi masuk sistem</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-18 17:30:11</span><span class="text-green-600 font-semibold w-14 flex-shrink-0">APPROVE</span><span>Verifikator: Andi Saleh → Dian Pertiwi (NIK: 7206xxx)</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-18 16:44:03</span><span class="text-green-600 font-semibold w-14 flex-shrink-0">APPROVE</span><span>Verifikator: Fatma Wati → Hamid Talib (NIK: 7207xxx)</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-18 16:12:55</span><span class="text-red-600 font-semibold w-14 flex-shrink-0">REJECT</span><span>Verifikator: Andi Saleh → Sari Mulyani — Dokumen KK tidak valid</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-18 15:30:00</span><span class="text-blue-600 font-semibold w-14 flex-shrink-0">EWS</span><span>Sistem → Notifikasi IPK rendah dikirim ke Eko Prasetyo (Buol)</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-18 14:05:22</span><span class="text-yellow-600 font-semibold w-14 flex-shrink-0">PENDING</span><span>Verifikator: Fatma Wati → Laila Fitri — Surat aktif kuliah belum ada</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-18 08:00:00</span><span class="text-slate-500 font-semibold w-14 flex-shrink-0">LOGIN</span><span>User: Fatma Wati — Verifikator masuk sistem</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-17 16:22:44</span><span class="text-green-600 font-semibold w-14 flex-shrink-0">APPROVE</span><span>Verifikator: Andi Saleh → Ayu Wulandari (NIK: 7208xxx)</span></div>
+      <div class="flex gap-3"><span class="text-slate-400 w-40 flex-shrink-0">2026-02-17 15:55:10</span><span class="text-red-600 font-semibold w-14 flex-shrink-0">REJECT</span><span>Verifikator: Andi Saleh → Hendra Laksono — IPK 2.50 di bawah minimum</span></div>
+    </div>
+    <div class="mt-4 text-xs text-slate-400 text-center">Menampilkan 15 dari 176 total log. Unduh untuk melihat semua.</div>
+  </div>
+</div>
+
+</main>
+</div><!-- end flex -->
+</div><!-- end flex-col -->
+
+<script>
+function showSub(key) {
+  document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('sub-' + key)?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector(`[data-key="${key}"]`)?.classList.add('active');
+}
+function toggleMob() {
+  const m = document.getElementById('mob-menu');
+  if (m) m.classList.toggle('hidden');
+}
+document.addEventListener('click', e => {
+  const m = document.getElementById('mob-menu');
+  if (m && !m.contains(e.target) && !e.target.closest('button[onclick="toggleMob()"]')) m.classList.add('hidden');
+});
+window.addEventListener('load', function() {
+  new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Pertanian', 'Teknik', 'Kesehatan', 'Pendidikan', 'Ekonomi', 'Lainnya'],
+      datasets: [{ label: 'Penerima', data: [4292, 6438, 5246, 2861, 2384, 2624], backgroundColor: ['#154fa0','#1a5eb8','#2878d4','#4482cc','#79a8dd','#aecaeb'], borderRadius: 6 }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(1)+'K' : v } }, x: { grid: { display: false } } } }
+  });
+  new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: { labels: ['Perempuan','Laki-laki'], datasets: [{ data: [58, 42], backgroundColor: ['#1a5eb8','#79a8dd'], borderWidth: 0, hoverOffset: 4 }] },
+    options: { responsive: true, cutout: '72%', plugins: { legend: { display: false } } }
+  });
+});
+</script>
+</body>
+</html>
