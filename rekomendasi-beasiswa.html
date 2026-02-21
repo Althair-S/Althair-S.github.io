@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekomendasi Beasiswa — SMART BEASISWA SULTENG</title>
+<meta name="description" content="Daftar rekomendasi beasiswa yang akan dibuka oleh berbagai Dinas di Sulawesi Tengah. Cek kebutuhan jurusan dan kuota.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        sulteng: {
+          50: '#eef4fb', 100: '#d5e5f5', 200: '#aecaeb', 300: '#79a8dd',
+          400: '#4482cc', 500: '#1a5eb8', 600: '#154fa0', 700: '#113f84',
+          800: '#0d306a', 900: '#092050',
+        }
+      },
+      fontFamily: {
+        display: ['"DM Serif Display"', 'serif'],
+        body: ['"Plus Jakarta Sans"', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .font-display { font-family: 'DM Serif Display', serif; }
+  .hero-gradient { background: linear-gradient(135deg, #0d306a 0%, #1a5eb8 45%, #2878d4 100%); }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f1f5f9; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp .5s ease both; }
+  .card-hover { transition: transform .2s, box-shadow .2s; }
+  .card-hover:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(0,0,0,.10); }
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 9999px; }
+  .tag { display: inline-flex; align-items: center; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 6px; margin: 2px; }
+  @keyframes pulse-ring { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.4)} 70%{box-shadow:0 0 0 8px rgba(34,197,94,0)} 100%{box-shadow:0 0 0 0 rgba(34,197,94,0)} }
+  .badge-live { animation: pulse-ring 2s infinite; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+<!-- ====== NAVBAR ====== -->
+<nav class="hero-gradient text-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+      <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+        <span class="text-sulteng-700 font-black text-lg">S</span>
+      </div>
+      <div>
+        <div class="font-display text-lg leading-tight">SMART BEASISWA</div>
+        <div class="text-xs text-blue-200 tracking-widest uppercase">Sulawesi Tengah</div>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium flex-wrap">
+      <a href="index.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">🏠 Beranda</a>
+      <a href="daftar.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">📝 Pendaftaran</a>
+      <a href="rekomendasi-beasiswa.html" class="px-3 py-2 rounded-lg bg-white/20 text-white font-semibold">🏅 Rekomendasi Beasiswa</a>
+      <a href="basis-data-calon.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">🗂️ Basis Data Calon</a>
+      <a href="dashboard-penerima.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">👤 Portal Penerima</a>
+      <a href="verifikator.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">✅ Verifikator</a>
+      <a href="dashboard-pimpinan.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">📊 Pimpinan</a>
+      <a href="login.html" class="ml-1 px-4 py-2 rounded-lg bg-white text-sulteng-700 font-semibold hover:bg-blue-50 transition-colors">🔐 Login</a>
+    </div>
+    <div class="md:hidden relative" id="mob-menu-wrap">
+      <button onclick="toggleMob()" class="text-xs bg-white/20 px-3 py-1.5 rounded-md flex items-center gap-1">☰ Menu</button>
+      <div id="mob-menu" class="hidden absolute right-0 top-10 bg-sulteng-800 rounded-xl shadow-xl overflow-hidden min-w-[200px] z-50 text-sm">
+        <a href="index.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">🏠 Beranda</a>
+        <a href="daftar.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📝 Pendaftaran</a>
+        <a href="rekomendasi-beasiswa.html" class="flex items-center gap-2 px-4 py-3 text-white bg-white/10 font-semibold">🏅 Rekomendasi Beasiswa</a>
+        <a href="basis-data-calon.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">🗂️ Basis Data Calon</a>
+        <a href="dashboard-penerima.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">👤 Portal Penerima</a>
+        <a href="verifikator.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">✅ Verifikator</a>
+        <a href="dashboard-pimpinan.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📊 Pimpinan</a>
+        <a href="login.html" class="flex items-center gap-2 px-4 py-3 text-white bg-white/10 font-semibold">🔐 Login</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== HERO ====== -->
+<div class="hero-gradient text-white py-16 px-4 relative overflow-hidden">
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute top-6 right-10 w-64 h-64 rounded-full bg-white"></div>
+    <div class="absolute -bottom-20 -left-10 w-80 h-80 rounded-full bg-blue-300"></div>
+  </div>
+  <div class="max-w-5xl mx-auto relative z-10">
+    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm mb-5 fade-up">
+      <span class="w-2 h-2 bg-green-400 rounded-full badge-live"></span>
+      Update Terakhir: Februari 2026
+    </div>
+    <h1 class="font-display text-4xl md:text-5xl mb-3 fade-up">Rekomendasi Beasiswa <span class="italic text-blue-200">2026</span></h1>
+    <p class="text-blue-100 max-w-2xl text-base fade-up">Daftar program beasiswa yang direncanakan atau akan dibuka oleh berbagai Dinas di lingkungan Pemerintah Provinsi Sulawesi Tengah. Data kebutuhan jurusan disesuaikan dengan kebutuhan SDM masing-masing instansi.</p>
+    <!-- Summary Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+      <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center fade-up">
+        <div class="text-3xl font-black">7</div>
+        <div class="text-xs text-blue-200 mt-1">Program Beasiswa</div>
+      </div>
+      <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center fade-up">
+        <div class="text-3xl font-black">5</div>
+        <div class="text-xs text-blue-200 mt-1">Dinas Terlibat</div>
+      </div>
+      <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center fade-up">
+        <div class="text-3xl font-black">285</div>
+        <div class="text-xs text-blue-200 mt-1">Total Kuota</div>
+      </div>
+      <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center fade-up">
+        <div class="text-3xl font-black">3</div>
+        <div class="text-xs text-blue-200 mt-1">Jurusan Prioritas</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== FILTER BAR ====== -->
+<div class="bg-white border-b border-slate-100 sticky top-14 z-40 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap gap-2 items-center">
+    <span class="text-xs text-slate-500 font-semibold mr-1">Filter Jurusan:</span>
+    <button onclick="filterCards('all')" id="btn-all" class="filter-btn active-btn text-xs px-4 py-1.5 rounded-full font-semibold border border-sulteng-500 bg-sulteng-600 text-white transition-all">Semua</button>
+    <button onclick="filterCards('pertanian')" id="btn-pertanian" class="filter-btn text-xs px-4 py-1.5 rounded-full font-semibold border border-green-400 text-green-700 hover:bg-green-50 transition-all">🌾 Pertanian</button>
+    <button onclick="filterCards('kedokteran')" id="btn-kedokteran" class="filter-btn text-xs px-4 py-1.5 rounded-full font-semibold border border-red-400 text-red-700 hover:bg-red-50 transition-all">⚕️ Dokter Umum</button>
+    <button onclick="filterCards('sosial')" id="btn-sosial" class="filter-btn text-xs px-4 py-1.5 rounded-full font-semibold border border-purple-400 text-purple-700 hover:bg-purple-50 transition-all">🏛️ Sosial & Kebijakan</button>
+    <button onclick="filterCards('teknologi')" id="btn-teknologi" class="filter-btn text-xs px-4 py-1.5 rounded-full font-semibold border border-blue-400 text-blue-700 hover:bg-blue-50 transition-all">💻 Teknologi</button>
+    <button onclick="filterCards('hukum')" id="btn-hukum" class="filter-btn text-xs px-4 py-1.5 rounded-full font-semibold border border-orange-400 text-orange-700 hover:bg-orange-50 transition-all">⚖️ Hukum</button>
+  </div>
+</div>
+
+<!-- ====== CARDS GRID ====== -->
+<div class="max-w-6xl mx-auto px-4 py-10">
+  <div id="cards-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+    <!-- Card 1: Dinas Pertanian -->
+    <div class="scholarship-card card-hover bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden" data-kategori="pertanian">
+      <div class="h-2 bg-green-500"></div>
+      <div class="p-6">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">🌾</div>
+          <span class="badge bg-green-100 text-green-700">🟢 Akan Dibuka</span>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Beasiswa Ketahanan Pangan Sulteng</h3>
+        <p class="text-xs text-slate-500 mb-3">Dinas Pertanian dan Perkebunan Provinsi Sulawesi Tengah</p>
+        <div class="space-y-2 text-sm text-slate-600">
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">📅</span><span>Periode: <strong>Maret – April 2026</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎯</span><span>Kuota: <strong class="text-green-700">60 Mahasiswa</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎓</span><span>Jenjang: S1 & D4</span></div>
+        </div>
+        <div class="mt-4">
+          <p class="text-xs text-slate-500 font-semibold mb-2">Jurusan yang Dibutuhkan:</p>
+          <div class="flex flex-wrap">
+            <span class="tag bg-green-100 text-green-700">Agribisnis</span>
+            <span class="tag bg-green-100 text-green-700">Agroteknologi</span>
+            <span class="tag bg-green-100 text-green-700">Teknologi Pertanian</span>
+            <span class="tag bg-teal-100 text-teal-700">Ilmu Tanah</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+          <p class="text-xs text-slate-500 mb-2">Persyaratan Utama:</p>
+          <ul class="text-xs text-slate-500 space-y-1">
+            <li>• IPK minimal 3.00 (skala 4.00)</li>
+            <li>• Semester 4–8</li>
+            <li>• Berasal dari keluarga petani/nelayan</li>
+            <li>• KTP/KK domisili Sulawesi Tengah</li>
+          </ul>
+        </div>
+        <a href="daftar.html" class="mt-4 w-full inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors">
+          Daftar Sekarang →
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 2: Dinas Kesehatan -->
+    <div class="scholarship-card card-hover bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden" data-kategori="kedokteran">
+      <div class="h-2 bg-red-500"></div>
+      <div class="p-6">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">⚕️</div>
+          <span class="badge bg-red-100 text-red-700">🔴 Prioritas Tinggi</span>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Beasiswa Tenaga Kesehatan Daerah Terpencil</h3>
+        <p class="text-xs text-slate-500 mb-3">Dinas Kesehatan Provinsi Sulawesi Tengah</p>
+        <div class="space-y-2 text-sm text-slate-600">
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">📅</span><span>Periode: <strong>April – Mei 2026</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎯</span><span>Kuota: <strong class="text-red-700">45 Mahasiswa</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎓</span><span>Jenjang: S1 (Profesi)</span></div>
+        </div>
+        <div class="mt-4">
+          <p class="text-xs text-slate-500 font-semibold mb-2">Jurusan yang Dibutuhkan:</p>
+          <div class="flex flex-wrap">
+            <span class="tag bg-red-100 text-red-700">Kedokteran Umum</span>
+            <span class="tag bg-red-100 text-red-700">Keperawatan</span>
+            <span class="tag bg-orange-100 text-orange-700">Kebidanan</span>
+            <span class="tag bg-orange-100 text-orange-700">Farmasi</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+          <p class="text-xs text-slate-500 mb-2">Persyaratan Utama:</p>
+          <ul class="text-xs text-slate-500 space-y-1">
+            <li>• IPK minimal 3.25 (skala 4.00)</li>
+            <li>• Ditugaskan di DTPK selama 3 tahun</li>
+            <li>• Belum memiliki ikatan dinas</li>
+            <li>• Surat rekomendasi kampus</li>
+          </ul>
+        </div>
+        <a href="daftar.html" class="mt-4 w-full inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors">
+          Daftar Sekarang →
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 3: Biro Pemerintahan -->
+    <div class="scholarship-card card-hover bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden" data-kategori="sosial">
+      <div class="h-2 bg-purple-500"></div>
+      <div class="p-6">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">🏛️</div>
+          <span class="badge bg-purple-100 text-purple-700">🟣 Segera Dibuka</span>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Beasiswa SDM Kebijakan Publik Sulteng</h3>
+        <p class="text-xs text-slate-500 mb-3">Biro Pemerintahan & Kesejahteraan Rakyat Pemprov Sulteng</p>
+        <div class="space-y-2 text-sm text-slate-600">
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">📅</span><span>Periode: <strong>Mei – Juni 2026</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎯</span><span>Kuota: <strong class="text-purple-700">50 Mahasiswa</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎓</span><span>Jenjang: S1 & S2</span></div>
+        </div>
+        <div class="mt-4">
+          <p class="text-xs text-slate-500 font-semibold mb-2">Jurusan yang Dibutuhkan:</p>
+          <div class="flex flex-wrap">
+            <span class="tag bg-purple-100 text-purple-700">Administrasi Publik</span>
+            <span class="tag bg-purple-100 text-purple-700">Ilmu Politik</span>
+            <span class="tag bg-indigo-100 text-indigo-700">Sosiologi</span>
+            <span class="tag bg-indigo-100 text-indigo-700">Kebijakan Publik</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+          <p class="text-xs text-slate-500 mb-2">Persyaratan Utama:</p>
+          <ul class="text-xs text-slate-500 space-y-1">
+            <li>• IPK minimal 3.10 (skala 4.00)</li>
+            <li>• Aktif di organisasi mahasiswa</li>
+            <li>• Esai visi pembangunan daerah</li>
+            <li>• Wawancara langsung</li>
+          </ul>
+        </div>
+        <a href="daftar.html" class="mt-4 w-full inline-flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors">
+          Daftar Sekarang →
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 4: Dinas Kominfo -->
+    <div class="scholarship-card card-hover bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden" data-kategori="teknologi">
+      <div class="h-2 bg-blue-500"></div>
+      <div class="p-6">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">💻</div>
+          <span class="badge bg-blue-100 text-blue-700">🔵 Perencanaan</span>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Beasiswa Transformasi Digital Sulteng</h3>
+        <p class="text-xs text-slate-500 mb-3">Dinas Komunikasi, Informatika, Persandian & Statistik</p>
+        <div class="space-y-2 text-sm text-slate-600">
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">📅</span><span>Periode: <strong>Juli – Agustus 2026</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎯</span><span>Kuota: <strong class="text-blue-700">40 Mahasiswa</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎓</span><span>Jenjang: S1 & D4</span></div>
+        </div>
+        <div class="mt-4">
+          <p class="text-xs text-slate-500 font-semibold mb-2">Jurusan yang Dibutuhkan:</p>
+          <div class="flex flex-wrap">
+            <span class="tag bg-blue-100 text-blue-700">Teknik Informatika</span>
+            <span class="tag bg-blue-100 text-blue-700">Sistem Informasi</span>
+            <span class="tag bg-cyan-100 text-cyan-700">Ilmu Komputer</span>
+            <span class="tag bg-cyan-100 text-cyan-700">Teknik Elektro</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+          <p class="text-xs text-slate-500 mb-2">Persyaratan Utama:</p>
+          <ul class="text-xs text-slate-500 space-y-1">
+            <li>• IPK minimal 3.00 (skala 4.00)</li>
+            <li>• Portofolio proyek digital</li>
+            <li>• Sertifikasi IT (diutamakan)</li>
+            <li>• Magang di instansi pemerintah</li>
+          </ul>
+        </div>
+        <a href="daftar.html" class="mt-4 w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors">
+          Daftar Sekarang →
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 5: Dinas Peternakan -->
+    <div class="scholarship-card card-hover bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden" data-kategori="pertanian">
+      <div class="h-2 bg-amber-500"></div>
+      <div class="p-6">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">🐄</div>
+          <span class="badge bg-amber-100 text-amber-700">🟡 Segera Dibuka</span>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Beasiswa Peternakan & Perikanan Sulteng</h3>
+        <p class="text-xs text-slate-500 mb-3">Dinas Peternakan dan Kesehatan Hewan Prov. Sulteng</p>
+        <div class="space-y-2 text-sm text-slate-600">
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">📅</span><span>Periode: <strong>Maret – Mei 2026</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎯</span><span>Kuota: <strong class="text-amber-700">50 Mahasiswa</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎓</span><span>Jenjang: S1 & D4</span></div>
+        </div>
+        <div class="mt-4">
+          <p class="text-xs text-slate-500 font-semibold mb-2">Jurusan yang Dibutuhkan:</p>
+          <div class="flex flex-wrap">
+            <span class="tag bg-amber-100 text-amber-700">Peternakan</span>
+            <span class="tag bg-amber-100 text-amber-700">Kedokteran Hewan</span>
+            <span class="tag bg-teal-100 text-teal-700">Budidaya Perairan</span>
+            <span class="tag bg-teal-100 text-teal-700">Teknologi Kelautan</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+          <p class="text-xs text-slate-500 mb-2">Persyaratan Utama:</p>
+          <ul class="text-xs text-slate-500 space-y-1">
+            <li>• IPK minimal 2.90 (skala 4.00)</li>
+            <li>• Berasal dari keluarga peternak/nelayan</li>
+            <li>• Siap ditempatkan di UPTD daerah</li>
+          </ul>
+        </div>
+        <a href="daftar.html" class="mt-4 w-full inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors">
+          Daftar Sekarang →
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 6: Biro Hukum -->
+    <div class="scholarship-card card-hover bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden" data-kategori="hukum sosial">
+      <div class="h-2 bg-orange-500"></div>
+      <div class="p-6">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">⚖️</div>
+          <span class="badge bg-orange-100 text-orange-700">🟠 Perencanaan</span>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Beasiswa Hukum & Tata Pemerintahan</h3>
+        <p class="text-xs text-slate-500 mb-3">Biro Hukum Sekretariat Daerah Provinsi Sulawesi Tengah</p>
+        <div class="space-y-2 text-sm text-slate-600">
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">📅</span><span>Periode: <strong>Juni – Agustus 2026</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎯</span><span>Kuota: <strong class="text-orange-700">25 Mahasiswa</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎓</span><span>Jenjang: S1 & S2</span></div>
+        </div>
+        <div class="mt-4">
+          <p class="text-xs text-slate-500 font-semibold mb-2">Jurusan yang Dibutuhkan:</p>
+          <div class="flex flex-wrap">
+            <span class="tag bg-orange-100 text-orange-700">Ilmu Hukum</span>
+            <span class="tag bg-orange-100 text-orange-700">Hukum Tata Negara</span>
+            <span class="tag bg-yellow-100 text-yellow-700">Administrasi Negara</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+          <p class="text-xs text-slate-500 mb-2">Persyaratan Utama:</p>
+          <ul class="text-xs text-slate-500 space-y-1">
+            <li>• IPK minimal 3.20 (skala 4.00)</li>
+            <li>• Pengalaman PKL di instansi hukum</li>
+            <li>• Surat referensi dosen pembimbing</li>
+          </ul>
+        </div>
+        <a href="daftar.html" class="mt-4 w-full inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold py-2.5 rounded-xl transition-colors">
+          Daftar Sekarang →
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 7: Beasiswa Pimpinan Daerah -->
+    <div class="scholarship-card card-hover bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden" data-kategori="sosial pertanian kedokteran teknologi hukum">
+      <div class="h-2 hero-gradient"></div>
+      <div class="p-6">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-sulteng-50 rounded-xl flex items-center justify-center text-2xl flex-shrink-0">🎖️</div>
+          <span class="badge bg-sulteng-100 text-sulteng-700">🔵 Unggulan</span>
+        </div>
+        <h3 class="font-bold text-slate-800 text-base mb-1">Beasiswa Berani Cerdas – Program Gubernur</h3>
+        <p class="text-xs text-slate-500 mb-3">Dinas Pendidikan & Kebudayaan Provinsi Sulawesi Tengah</p>
+        <div class="space-y-2 text-sm text-slate-600">
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">📅</span><span>Periode: <strong>Februari – Maret 2026</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎯</span><span>Kuota: <strong class="text-sulteng-700">15 Mahasiswa (S2/S3)</strong></span></div>
+          <div class="flex items-center gap-2"><span class="text-slate-400 text-xs">🎓</span><span>Jenjang: S2 & S3 Luar Negeri</span></div>
+        </div>
+        <div class="mt-4">
+          <p class="text-xs text-slate-500 font-semibold mb-2">Jurusan yang Dibutuhkan:</p>
+          <div class="flex flex-wrap">
+            <span class="tag bg-sulteng-100 text-sulteng-700">Semua Jurusan Prioritas</span>
+            <span class="tag bg-green-100 text-green-700">Pertanian</span>
+            <span class="tag bg-red-100 text-red-700">Kedokteran</span>
+            <span class="tag bg-purple-100 text-purple-700">Kebijakan Publik</span>
+          </div>
+        </div>
+        <div class="mt-4 pt-4 border-t border-slate-100">
+          <p class="text-xs text-slate-500 mb-2">Persyaratan Utama:</p>
+          <ul class="text-xs text-slate-500 space-y-1">
+            <li>• IPK S1 minimal 3.50 (skala 4.00)</li>
+            <li>• TOEFL ≥ 500 / IELTS ≥ 6.0</li>
+            <li>• LoA dari universitas tujuan</li>
+            <li>• Ikatan dinas 5 tahun</li>
+          </ul>
+        </div>
+        <a href="daftar.html" class="mt-4 w-full inline-flex items-center justify-center gap-2 hero-gradient text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90 transition-opacity">
+          Daftar Sekarang →
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Empty state -->
+  <div id="empty-state" class="hidden text-center py-20">
+    <div class="text-5xl mb-4">🔍</div>
+    <p class="text-slate-500 font-semibold">Tidak ada beasiswa ditemukan untuk filter ini.</p>
+    <button onclick="filterCards('all')" class="mt-4 text-sulteng-600 underline text-sm">Tampilkan semua</button>
+  </div>
+</div>
+
+<!-- ====== JADWAL TIMELINE ====== -->
+<div class="bg-white border-t border-slate-100 py-14 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-10">
+      <div class="text-xs text-sulteng-500 font-semibold uppercase tracking-widest mb-2">Kalender</div>
+      <h2 class="font-display text-3xl text-slate-800">Jadwal Pembukaan Beasiswa 2026</h2>
+    </div>
+    <div class="relative">
+      <!-- Timeline line -->
+      <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-sulteng-100 -translate-x-1/2"></div>
+      <div class="space-y-8">
+
+        <div class="relative flex items-start md:justify-end gap-4 md:pr-10 fade-up">
+          <div class="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-green-500 border-2 border-white -translate-x-1/2 mt-1.5"></div>
+          <div class="ml-10 md:ml-0 bg-green-50 border border-green-200 rounded-xl p-4 max-w-sm w-full">
+            <div class="text-xs text-green-600 font-semibold mb-1">Maret – April 2026</div>
+            <div class="font-semibold text-slate-800 text-sm">Beasiswa Ketahanan Pangan & Peternakan</div>
+            <div class="text-xs text-slate-500 mt-1">Dinas Pertanian & Dinas Peternakan</div>
+          </div>
+        </div>
+
+        <div class="relative flex items-start gap-4 md:pl-10 fade-up">
+          <div class="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-red-500 border-2 border-white -translate-x-1/2 mt-1.5"></div>
+          <div class="ml-10 bg-red-50 border border-red-200 rounded-xl p-4 max-w-sm w-full">
+            <div class="text-xs text-red-600 font-semibold mb-1">April – Mei 2026</div>
+            <div class="font-semibold text-slate-800 text-sm">Beasiswa Tenaga Kesehatan DTPK</div>
+            <div class="text-xs text-slate-500 mt-1">Dinas Kesehatan Prov. Sulteng</div>
+          </div>
+        </div>
+
+        <div class="relative flex items-start md:justify-end gap-4 md:pr-10 fade-up">
+          <div class="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-purple-500 border-2 border-white -translate-x-1/2 mt-1.5"></div>
+          <div class="ml-10 md:ml-0 bg-purple-50 border border-purple-200 rounded-xl p-4 max-w-sm w-full">
+            <div class="text-xs text-purple-600 font-semibold mb-1">Mei – Juni 2026</div>
+            <div class="font-semibold text-slate-800 text-sm">Beasiswa SDM Kebijakan Publik</div>
+            <div class="text-xs text-slate-500 mt-1">Biro Pemerintahan & Kesejahteraan Rakyat</div>
+          </div>
+        </div>
+
+        <div class="relative flex items-start gap-4 md:pl-10 fade-up">
+          <div class="absolute left-4 md:left-1/2 w-3 h-3 rounded-full bg-blue-500 border-2 border-white -translate-x-1/2 mt-1.5"></div>
+          <div class="ml-10 bg-blue-50 border border-blue-200 rounded-xl p-4 max-w-sm w-full">
+            <div class="text-xs text-blue-600 font-semibold mb-1">Juli – Agustus 2026</div>
+            <div class="font-semibold text-slate-800 text-sm">Beasiswa Digital & Hukum Tata Pemerintahan</div>
+            <div class="text-xs text-slate-500 mt-1">Dinas Kominfo & Biro Hukum Setda</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<footer class="bg-sulteng-900 text-blue-200 py-10 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+            <span class="text-sulteng-700 font-black text-sm">S</span>
+          </div>
+          <div class="font-display text-white text-base">SMART BEASISWA SULTENG</div>
+        </div>
+        <p class="text-xs text-blue-300 leading-relaxed">Halaman Rekomendasi Beasiswa — menampilkan program beasiswa yang akan dibuka oleh berbagai Dinas Pemprov Sulteng.</p>
+      </div>
+      <div>
+        <p class="text-xs text-blue-400 uppercase tracking-wider font-semibold mb-3">Portal</p>
+        <div class="space-y-2 text-sm">
+          <div><a href="index.html" class="hover:text-white transition-colors">Beranda</a></div>
+          <div><a href="daftar.html" class="hover:text-white transition-colors">Pendaftaran</a></div>
+          <div><a href="basis-data-calon.html" class="hover:text-white transition-colors">Basis Data Calon</a></div>
+          <div><a href="dashboard-pimpinan.html" class="hover:text-white transition-colors">Dashboard Pimpinan</a></div>
+        </div>
+      </div>
+      <div>
+        <p class="text-xs text-blue-400 uppercase tracking-wider font-semibold mb-3">Kontak</p>
+        <div class="text-sm space-y-2">
+          <p>Biro Pemerintahan & Kesejahteraan Rakyat</p>
+          <p>Pemerintah Provinsi Sulawesi Tengah</p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-blue-900 pt-6 text-center text-xs text-blue-400">
+      © 2026 Pemerintah Provinsi Sulawesi Tengah — Biro Pemerintahan & Kesejahteraan Rakyat
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleMob() {
+  const m = document.getElementById('mob-menu');
+  if (m) m.classList.toggle('hidden');
+}
+document.addEventListener('click', e => {
+  const m = document.getElementById('mob-menu');
+  if (m && !m.contains(e.target) && !e.target.closest('button[onclick="toggleMob()"]')) m.classList.add('hidden');
+});
+
+function filterCards(cat) {
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('bg-sulteng-600', 'text-white', 'border-sulteng-500');
+    btn.classList.add('hover:opacity-80');
+  });
+  const activeBtn = document.getElementById('btn-' + (cat === 'all' ? 'all' : cat.split(' ')[0]));
+  if (activeBtn) {
+    activeBtn.classList.add('bg-sulteng-600', 'text-white', 'border-sulteng-500');
+  }
+
+  const cards = document.querySelectorAll('.scholarship-card');
+  let visible = 0;
+  cards.forEach(card => {
+    const kategori = card.dataset.kategori || '';
+    if (cat === 'all' || kategori.split(' ').includes(cat)) {
+      card.style.display = '';
+      visible++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  document.getElementById('empty-state').classList.toggle('hidden', visible > 0);
+}
+</script>
+</body>
+</html>

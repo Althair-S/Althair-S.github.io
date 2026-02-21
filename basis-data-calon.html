@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Basis Data Calon Penerima Beasiswa — SMART BEASISWA SULTENG</title>
+<meta name="description" content="Basis data calon peserta penerima beasiswa Sulawesi Tengah berdasarkan jurusan dan skor rekomendasi.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        sulteng: {
+          50: '#eef4fb', 100: '#d5e5f5', 200: '#aecaeb', 300: '#79a8dd',
+          400: '#4482cc', 500: '#1a5eb8', 600: '#154fa0', 700: '#113f84',
+          800: '#0d306a', 900: '#092050',
+        }
+      },
+      fontFamily: {
+        display: ['"DM Serif Display"', 'serif'],
+        body: ['"Plus Jakarta Sans"', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { font-family: 'Plus Jakarta Sans', sans-serif; }
+  .font-display { font-family: 'DM Serif Display', serif; }
+  .hero-gradient { background: linear-gradient(135deg, #0d306a 0%, #1a5eb8 45%, #2878d4 100%); }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #f1f5f9; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp .5s ease both; }
+  tr:hover td { background-color: #f8faff; }
+  .score-bar { height: 6px; border-radius: 999px; background: #e2e8f0; overflow: hidden; }
+  .score-fill { height: 100%; border-radius: 999px; }
+  .badge-rekomendasi { display: inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; padding:2px 10px; border-radius:9999px; }
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:9999; display:flex; align-items:center; justify-content:center; }
+  .modal-box { background:white; border-radius:20px; padding:28px; max-width:480px; width:90%; max-height:90vh; overflow-y:auto; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+<!-- ====== NAVBAR ====== -->
+<nav class="hero-gradient text-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 flex-shrink-0">
+      <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center flex-shrink-0">
+        <span class="text-sulteng-700 font-black text-lg">S</span>
+      </div>
+      <div>
+        <div class="font-display text-lg leading-tight">SMART BEASISWA</div>
+        <div class="text-xs text-blue-200 tracking-widest uppercase">Sulawesi Tengah</div>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium flex-wrap">
+      <a href="index.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">🏠 Beranda</a>
+      <a href="daftar.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">📝 Pendaftaran</a>
+      <a href="rekomendasi-beasiswa.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">🏅 Rekomendasi Beasiswa</a>
+      <a href="basis-data-calon.html" class="px-3 py-2 rounded-lg bg-white/20 text-white font-semibold">🗂️ Basis Data Calon</a>
+      <a href="dashboard-penerima.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">👤 Portal Penerima</a>
+      <a href="verifikator.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">✅ Verifikator</a>
+      <a href="dashboard-pimpinan.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">📊 Pimpinan</a>
+      <a href="login.html" class="ml-1 px-4 py-2 rounded-lg bg-white text-sulteng-700 font-semibold hover:bg-blue-50 transition-colors">🔐 Login</a>
+    </div>
+    <div class="md:hidden relative" id="mob-menu-wrap">
+      <button onclick="toggleMob()" class="text-xs bg-white/20 px-3 py-1.5 rounded-md flex items-center gap-1">☰ Menu</button>
+      <div id="mob-menu" class="hidden absolute right-0 top-10 bg-sulteng-800 rounded-xl shadow-xl overflow-hidden min-w-[200px] z-50 text-sm">
+        <a href="index.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">🏠 Beranda</a>
+        <a href="daftar.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📝 Pendaftaran</a>
+        <a href="rekomendasi-beasiswa.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">🏅 Rekomendasi Beasiswa</a>
+        <a href="basis-data-calon.html" class="flex items-center gap-2 px-4 py-3 text-white bg-white/10 font-semibold">🗂️ Basis Data Calon</a>
+        <a href="dashboard-penerima.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">👤 Portal Penerima</a>
+        <a href="verifikator.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">✅ Verifikator</a>
+        <a href="dashboard-pimpinan.html" class="flex items-center gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📊 Pimpinan</a>
+        <a href="login.html" class="flex items-center gap-2 px-4 py-3 text-white bg-white/10 font-semibold">🔐 Login</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ====== HERO ====== -->
+<div class="hero-gradient text-white py-14 px-4 relative overflow-hidden">
+  <div class="absolute inset-0 opacity-10">
+    <div class="absolute top-6 right-10 w-64 h-64 rounded-full bg-white"></div>
+    <div class="absolute -bottom-20 -left-10 w-80 h-80 rounded-full bg-blue-300"></div>
+  </div>
+  <div class="max-w-6xl mx-auto relative z-10">
+    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm mb-5 fade-up">
+      🗂️ Internal — Akses Terbatas Verifikator & Pimpinan
+    </div>
+    <h1 class="font-display text-4xl md:text-5xl mb-3 fade-up">Basis Data Calon <span class="italic text-blue-200">Penerima Beasiswa</span></h1>
+    <p class="text-blue-100 max-w-2xl text-base fade-up">Daftar calon peserta yang telah melalui verifikasi dokumen awal dari berbagai instansi (dinas). Nama-nama yang direkomendasikan berdasarkan skor sistem, kebutuhan jurusan dinas, IPK, dan kondisi ekonomi.</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+      <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center fade-up">
+        <div class="text-3xl font-black" id="stat-total">24</div>
+        <div class="text-xs text-blue-200 mt-1">Total Calon Terdaftar</div>
+      </div>
+      <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center fade-up">
+        <div class="text-3xl font-black" id="stat-rekomen">15</div>
+        <div class="text-xs text-blue-200 mt-1">Direkomendasikan</div>
+      </div>
+      <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center fade-up">
+        <div class="text-3xl font-black" id="stat-review">6</div>
+        <div class="text-xs text-blue-200 mt-1">Dalam Review</div>
+      </div>
+      <div class="bg-white/15 backdrop-blur-sm rounded-xl p-4 text-center fade-up">
+        <div class="text-3xl font-black" id="stat-tidak">3</div>
+        <div class="text-xs text-blue-200 mt-1">Tidak Lolos Admin</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== FILTER & SEARCH ====== -->
+<div class="bg-white border-b border-slate-100 sticky top-14 z-40 shadow-sm">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap gap-2 items-center justify-between">
+    <div class="flex flex-wrap gap-2 items-center">
+      <span class="text-xs text-slate-500 font-semibold">Filter:</span>
+      <select id="filter-jurusan" onchange="applyFilters()" class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 bg-white outline-none focus:ring-2 focus:ring-sulteng-300">
+        <option value="all">Semua Jurusan</option>
+        <option value="pertanian">🌾 Pertanian</option>
+        <option value="kedokteran">⚕️ Kedokteran Umum</option>
+        <option value="sosial">🏛️ Sosial & Kebijakan Publik</option>
+        <option value="teknologi">💻 Teknologi Informasi</option>
+        <option value="hukum">⚖️ Hukum</option>
+        <option value="peternakan">🐄 Peternakan</option>
+      </select>
+      <select id="filter-status" onchange="applyFilters()" class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 bg-white outline-none focus:ring-2 focus:ring-sulteng-300">
+        <option value="all">Semua Status</option>
+        <option value="Direkomendasikan">✅ Direkomendasikan</option>
+        <option value="Review">🔄 Dalam Review</option>
+        <option value="Tidak Lolos">❌ Tidak Lolos Admin</option>
+      </select>
+      <select id="filter-dinas" onchange="applyFilters()" class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 bg-white outline-none focus:ring-2 focus:ring-sulteng-300">
+        <option value="all">Semua Dinas</option>
+        <option value="Dinas Pertanian">Dinas Pertanian</option>
+        <option value="Dinas Kesehatan">Dinas Kesehatan</option>
+        <option value="Biro Pemerintahan">Biro Pemerintahan</option>
+        <option value="Dinas Kominfo">Dinas Kominfo</option>
+        <option value="Dinas Peternakan">Dinas Peternakan</option>
+        <option value="Biro Hukum">Biro Hukum</option>
+      </select>
+    </div>
+    <div class="flex items-center gap-2">
+      <input id="search-input" oninput="applyFilters()" type="search" placeholder="Cari nama / NIM…" class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 w-44 outline-none focus:ring-2 focus:ring-sulteng-300">
+      <span id="result-count" class="text-xs text-slate-400 whitespace-nowrap">24 dari 24</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====== TABLE ====== -->
+<div class="max-w-6xl mx-auto px-4 py-8">
+
+  <!-- Legend -->
+  <div class="flex flex-wrap gap-3 mb-5 text-xs">
+    <div class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-full bg-green-500"></span> Direkomendasikan</div>
+    <div class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-full bg-amber-400"></span> Dalam Review</div>
+    <div class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded-full bg-red-400"></span> Tidak Lolos Admin</div>
+    <div class="ml-auto text-slate-400">*Skor 0–100 = IPK (40%) + Ekonomi (35%) + Wilayah (15%) + Prestasi (10%)</div>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-sulteng-800 text-white text-xs uppercase tracking-wide">
+            <th class="px-4 py-3 text-left w-8">#</th>
+            <th class="px-4 py-3 text-left">Nama Calon</th>
+            <th class="px-4 py-3 text-left">Jurusan</th>
+            <th class="px-4 py-3 text-left">Dinas Tujuan</th>
+            <th class="px-4 py-3 text-center">IPK</th>
+            <th class="px-4 py-3 text-center w-28">Skor Sistem</th>
+            <th class="px-4 py-3 text-center">Status</th>
+            <th class="px-4 py-3 text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="table-body" class="divide-y divide-slate-100">
+          <!-- Rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+    <div id="empty-row" class="hidden text-center py-10 text-slate-400">
+      <div class="text-4xl mb-2">🔍</div>
+      <p>Tidak ada calon ditemukan sesuai filter.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== KATEGORI SUMMARY ====== -->
+<div class="max-w-6xl mx-auto px-4 pb-12">
+  <h2 class="font-display text-2xl text-slate-800 mb-5">Rekapitulasi per Dinas & Jurusan</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+    <!-- Pertanian -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center text-xl">🌾</div>
+        <div>
+          <div class="font-bold text-slate-800 text-sm">Dinas Pertanian</div>
+          <div class="text-xs text-slate-500">Jurusan Pertanian & Agribisnis</div>
+        </div>
+      </div>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between"><span class="text-slate-500">Calon Terdaftar</span><span class="font-semibold">8</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Direkomendasikan</span><span class="font-semibold text-green-600">5</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Kuota Beasiswa</span><span class="font-semibold text-sulteng-600">60</span></div>
+      </div>
+      <div class="mt-3">
+        <div class="text-xs text-slate-400 mb-1">Pemenuhan Calon: 8/60</div>
+        <div class="score-bar"><div class="score-fill bg-green-400" style="width:13%"></div></div>
+      </div>
+    </div>
+
+    <!-- Kesehatan -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-xl">⚕️</div>
+        <div>
+          <div class="font-bold text-slate-800 text-sm">Dinas Kesehatan</div>
+          <div class="text-xs text-slate-500">Dokter Umum, Keperawatan, Farmasi</div>
+        </div>
+      </div>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between"><span class="text-slate-500">Calon Terdaftar</span><span class="font-semibold">7</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Direkomendasikan</span><span class="font-semibold text-green-600">5</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Kuota Beasiswa</span><span class="font-semibold text-sulteng-600">45</span></div>
+      </div>
+      <div class="mt-3">
+        <div class="text-xs text-slate-400 mb-1">Pemenuhan Calon: 7/45</div>
+        <div class="score-bar"><div class="score-fill bg-red-400" style="width:16%"></div></div>
+      </div>
+    </div>
+
+    <!-- Biro Pemerintahan -->
+    <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center text-xl">🏛️</div>
+        <div>
+          <div class="font-bold text-slate-800 text-sm">Biro Pemerintahan</div>
+          <div class="text-xs text-slate-500">Adm. Publik, Kebijakan, Sosiologi</div>
+        </div>
+      </div>
+      <div class="space-y-2 text-sm">
+        <div class="flex justify-between"><span class="text-slate-500">Calon Terdaftar</span><span class="font-semibold">9</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Direkomendasikan</span><span class="font-semibold text-green-600">5</span></div>
+        <div class="flex justify-between"><span class="text-slate-500">Kuota Beasiswa</span><span class="font-semibold text-sulteng-600">50</span></div>
+      </div>
+      <div class="mt-3">
+        <div class="text-xs text-slate-400 mb-1">Pemenuhan Calon: 9/50</div>
+        <div class="score-bar"><div class="score-fill bg-purple-400" style="width:18%"></div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ====== DETAIL MODAL ====== -->
+<div id="detail-modal" class="hidden modal-overlay" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="flex items-start justify-between mb-4">
+      <h3 class="font-bold text-slate-800 text-lg" id="modal-nama">—</h3>
+      <button onclick="document.getElementById('detail-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600 text-xl leading-none">✕</button>
+    </div>
+    <div id="modal-content" class="space-y-3 text-sm"></div>
+  </div>
+</div>
+
+<!-- ====== FOOTER ====== -->
+<footer class="bg-sulteng-900 text-blue-200 py-10 px-4">
+  <div class="max-w-5xl mx-auto">
+    <div class="border-t border-blue-900 pt-6 text-center text-xs text-blue-400">
+      © 2026 Pemerintah Provinsi Sulawesi Tengah — SMART BEASISWA SULTENG &nbsp;|&nbsp; <span class="italic">Data dummy untuk demonstrasi</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ====== DUMMY DATA ======
+const DATA = [
+  // PERTANIAN
+  {no:1, nama:"Ahmad Rahmat Saleh", nim:"D031190132", jurusan:"Agribisnis", kategori:"pertanian", dinas:"Dinas Pertanian", kab:"Palu", ipk:3.72, skor:88, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"Juara 2 PIMNAS", angkatan:2019},
+  {no:2, nama:"Nur Fadilah Basri", nim:"D031200214", jurusan:"Agroteknologi", kategori:"pertanian", dinas:"Dinas Pertanian", kab:"Sigi", ipk:3.55, skor:82, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"Beasiswa Bidikmisi", angkatan:2020},
+  {no:3, nama:"Moh. Taufik Hidayat", nim:"D031190345", jurusan:"Teknologi Pertanian", kategori:"pertanian", dinas:"Dinas Pertanian", kab:"Donggala", ipk:3.41, skor:79, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"—", angkatan:2019},
+  {no:4, nama:"Sriwahyuni Latief", nim:"D031200456", jurusan:"Agribisnis", kategori:"pertanian", dinas:"Dinas Pertanian", kab:"Poso", ipk:3.80, skor:91, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"Mahasiswa terbaik 2022", angkatan:2020},
+  {no:5, nama:"Irfan Maulana Dg. Parani", nim:"D031210678", jurusan:"Ilmu Tanah", kategori:"pertanian", dinas:"Dinas Pertanian", kab:"Parigi Moutong", ipk:3.30, skor:75, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"—", angkatan:2021},
+  {no:6, nama:"Raodah M. Toha", nim:"D031200789", jurusan:"Agroteknologi", kategori:"pertanian", dinas:"Dinas Pertanian", kab:"Tolitoli", ipk:2.98, skor:65, status:"Review", ekonomi:"Sedang", prestasi:"—", angkatan:2020},
+  {no:7, nama:"Chairul Badri", nim:"D031190900", jurusan:"Agribisnis", kategori:"pertanian", dinas:"Dinas Pertanian", kab:"Buol", ipk:2.81, skor:58, status:"Review", ekonomi:"Sedang", prestasi:"—", angkatan:2019},
+  {no:8, nama:"Endang Susanti", nim:"D031210111", jurusan:"Teknologi Pertanian", kategori:"pertanian", dinas:"Dinas Pertanian", kab:"Palu", ipk:2.67, skor:47, status:"Tidak Lolos", ekonomi:"Menengah", prestasi:"—", angkatan:2021},
+
+  // KEDOKTERAN
+  {no:9, nama:"dr. Ananda Putri Syarif", nim:"N011180023", jurusan:"Kedokteran Umum", kategori:"kedokteran", dinas:"Dinas Kesehatan", kab:"Palu", ipk:3.85, skor:93, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"Cum Laude", angkatan:2018},
+  {no:10, nama:"Fachri Ramadhan Pomalingo", nim:"N011190056", jurusan:"Keperawatan", kategori:"kedokteran", dinas:"Dinas Kesehatan", kab:"Banggai", ipk:3.70, skor:87, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"Relawan Kesehatan Terpencil", angkatan:2019},
+  {no:11, nama:"Suci Amelia Wulandari", nim:"N011190078", jurusan:"Kedokteran Umum", kategori:"kedokteran", dinas:"Dinas Kesehatan", kab:"Morowali", ipk:3.60, skor:84, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"—", angkatan:2019},
+  {no:12, nama:"Yusuf Hidayatullah Kau", nim:"N011200099", jurusan:"Farmasi", kategori:"kedokteran", dinas:"Dinas Kesehatan", kab:"Tojo Una-Una", ipk:3.55, skor:81, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"PKM-K Lolos Nasional", angkatan:2020},
+  {no:13, nama:"Rika Sari Budiarto", nim:"N011190112", jurusan:"Kebidanan", kategori:"kedokteran", dinas:"Dinas Kesehatan", kab:"Banggai Laut", ipk:3.45, skor:78, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"—", angkatan:2019},
+  {no:14, nama:"Miftahul Jannah Daud", nim:"N011200133", jurusan:"Keperawatan", kategori:"kedokteran", dinas:"Dinas Kesehatan", kab:"Palu", ipk:3.15, skor:70, status:"Review", ekonomi:"Sedang", prestasi:"—", angkatan:2020},
+  {no:15, nama:"Ikbal Karim", nim:"N011200145", jurusan:"Kedokteran Umum", kategori:"kedokteran", dinas:"Dinas Kesehatan", kab:"Palu", ipk:2.90, skor:55, status:"Tidak Lolos", ekonomi:"Menengah", prestasi:"—", angkatan:2020},
+
+  // SOSIAL & KEBIJAKAN
+  {no:16, nama:"Risna Dg. Mappau", nim:"E041190201", jurusan:"Administrasi Publik", kategori:"sosial", dinas:"Biro Pemerintahan", kab:"Palu", ipk:3.78, skor:90, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"Presiden BEM Untad 2022", angkatan:2019},
+  {no:17, nama:"Hasanuddin Efendi", nim:"E041200230", jurusan:"Ilmu Politik", kategori:"sosial", dinas:"Biro Pemerintahan", kab:"Sigi", ipk:3.65, skor:86, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"Delegasi G20 Youth Forum", angkatan:2020},
+  {no:18, nama:"Aditya Gita Purnama", nim:"E041200260", jurusan:"Kebijakan Publik", kategori:"sosial", dinas:"Biro Pemerintahan", kab:"Parigi Moutong", ipk:3.55, skor:83, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"Peneliti Muda Kemendikbud", angkatan:2020},
+  {no:19, nama:"Harliah Saputri", nim:"E041190290", jurusan:"Sosiologi", kategori:"sosial", dinas:"Biro Pemerintahan", kab:"Tolitoli", ipk:3.40, skor:78, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"—", angkatan:2019},
+  {no:20, nama:"Mufarikhin Ramlan", nim:"E041200310", jurusan:"Administrasi Publik", kategori:"sosial", dinas:"Biro Pemerintahan", kab:"Palu", ipk:3.30, skor:74, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"—", angkatan:2020},
+  {no:21, nama:"Diana Pratiwi Hakim", nim:"E041210350", jurusan:"Ilmu Politik", kategori:"sosial", dinas:"Biro Pemerintahan", kab:"Donggala", ipk:3.10, skor:68, status:"Review", ekonomi:"Sedang", prestasi:"—", angkatan:2021},
+  {no:22, nama:"Yuli Andini Kadir", nim:"E041210370", jurusan:"Sosiologi", kategori:"sosial", dinas:"Biro Pemerintahan", kab:"Palu", ipk:3.05, skor:64, status:"Review", ekonomi:"Sedang", prestasi:"—", angkatan:2021},
+  {no:23, nama:"Muh. Reza Pratama", nim:"E041200400", jurusan:"Administrasi Publik", kategori:"sosial", dinas:"Biro Pemerintahan", kab:"Palu", ipk:2.88, skor:49, status:"Tidak Lolos", ekonomi:"Menengah", prestasi:"—", angkatan:2020},
+
+  // TEKNOLOGI
+  {no:24, nama:"Farhan Maulana Akbar", nim:"D121200501", jurusan:"Teknik Informatika", kategori:"teknologi", dinas:"Dinas Kominfo", kab:"Palu", ipk:3.90, skor:94, status:"Direkomendasikan", ekonomi:"Kurang Mampu", prestasi:"Juara 1 Hackathon Nasional 2023", angkatan:2020},
+];
+
+function statusBadge(s) {
+  if(s==="Direkomendasikan") return `<span class="badge-rekomendasi bg-green-100 text-green-700">✅ Direkomendasikan</span>`;
+  if(s==="Review") return `<span class="badge-rekomendasi bg-amber-100 text-amber-700">🔄 Review</span>`;
+  return `<span class="badge-rekomendasi bg-red-100 text-red-700">❌ Tidak Lolos</span>`;
+}
+
+function scoreColor(s) {
+  if(s>=85) return 'bg-green-500';
+  if(s>=70) return 'bg-amber-400';
+  return 'bg-red-400';
+}
+
+function renderTable(rows) {
+  const tbody = document.getElementById('table-body');
+  const empty = document.getElementById('empty-row');
+  if(!rows.length){ tbody.innerHTML=''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  tbody.innerHTML = rows.map((d,i) => `
+    <tr class="text-sm transition-colors">
+      <td class="px-4 py-3 text-slate-400 text-xs">${i+1}</td>
+      <td class="px-4 py-3">
+        <div class="font-semibold text-slate-800">${d.nama}</div>
+        <div class="text-xs text-slate-400">${d.nim} · ${d.kab}</div>
+      </td>
+      <td class="px-4 py-3">
+        <div class="text-slate-700 font-medium">${d.jurusan}</div>
+        <div class="text-xs text-slate-400">Angkatan ${d.angkatan}</div>
+      </td>
+      <td class="px-4 py-3 text-slate-600 text-xs">${d.dinas}</td>
+      <td class="px-4 py-3 text-center">
+        <span class="font-bold text-sulteng-700">${d.ipk.toFixed(2)}</span>
+      </td>
+      <td class="px-4 py-3">
+        <div class="flex items-center gap-2">
+          <div class="score-bar flex-1"><div class="score-fill ${scoreColor(d.skor)}" style="width:${d.skor}%"></div></div>
+          <span class="font-bold text-xs w-6 text-right">${d.skor}</span>
+        </div>
+      </td>
+      <td class="px-4 py-3 text-center">${statusBadge(d.status)}</td>
+      <td class="px-4 py-3 text-center">
+        <button onclick="showDetail(${d.no-1})" class="text-xs bg-sulteng-50 hover:bg-sulteng-100 text-sulteng-700 font-semibold px-3 py-1.5 rounded-lg transition-colors">Detail</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function applyFilters() {
+  const jurusan = document.getElementById('filter-jurusan').value;
+  const status = document.getElementById('filter-status').value;
+  const dinas = document.getElementById('filter-dinas').value;
+  const q = document.getElementById('search-input').value.toLowerCase();
+
+  const result = DATA.filter(d => {
+    const matchJ = jurusan==='all' || d.kategori===jurusan;
+    const matchS = status==='all' || d.status===status;
+    const matchD = dinas==='all' || d.dinas===dinas;
+    const matchQ = !q || d.nama.toLowerCase().includes(q) || d.nim.toLowerCase().includes(q);
+    return matchJ && matchS && matchD && matchQ;
+  });
+
+  document.getElementById('result-count').textContent = `${result.length} dari ${DATA.length}`;
+  renderTable(result);
+}
+
+function showDetail(idx) {
+  const d = DATA[idx];
+  document.getElementById('modal-nama').textContent = d.nama;
+  document.getElementById('modal-content').innerHTML = `
+    <div class="grid grid-cols-2 gap-3">
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400 mb-0.5">NIM</div>
+        <div class="font-semibold">${d.nim}</div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400 mb-0.5">Jurusan</div>
+        <div class="font-semibold">${d.jurusan}</div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400 mb-0.5">Dinas Tujuan</div>
+        <div class="font-semibold">${d.dinas}</div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400 mb-0.5">Kabupaten/Kota</div>
+        <div class="font-semibold">${d.kab}</div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400 mb-0.5">IPK</div>
+        <div class="font-black text-sulteng-700 text-lg">${d.ipk.toFixed(2)}</div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400 mb-0.5">Skor Sistem</div>
+        <div class="font-black text-lg ${d.skor>=85?'text-green-600':d.skor>=70?'text-amber-500':'text-red-500'}">${d.skor}/100</div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400 mb-0.5">Kondisi Ekonomi</div>
+        <div class="font-semibold">${d.ekonomi}</div>
+      </div>
+      <div class="bg-slate-50 rounded-xl p-3">
+        <div class="text-xs text-slate-400 mb-0.5">Angkatan</div>
+        <div class="font-semibold">${d.angkatan}</div>
+      </div>
+    </div>
+    <div class="bg-slate-50 rounded-xl p-3 mt-1">
+      <div class="text-xs text-slate-400 mb-0.5">Prestasi / Catatan</div>
+      <div class="font-semibold">${d.prestasi||'—'}</div>
+    </div>
+    <div class="mt-2 text-center">
+      ${statusBadge(d.status)}
+    </div>
+    <div class="mt-3 pt-3 border-t border-slate-100">
+      <p class="text-xs text-slate-400 mb-2 font-semibold">Komponen Skor:</p>
+      <div class="space-y-2">
+        <div class="flex items-center gap-2 text-xs"><span class="w-28 text-slate-500">IPK (40%)</span><div class="score-bar flex-1"><div class="score-fill bg-sulteng-500" style="width:${Math.round(d.ipk/4*100)}%"></div></div><span class="w-6 text-right font-bold">${Math.round(d.ipk/4*40)}</span></div>
+        <div class="flex items-center gap-2 text-xs"><span class="w-28 text-slate-500">Ekonomi (35%)</span><div class="score-bar flex-1"><div class="score-fill bg-amber-400" style="width:${d.ekonomi==='Kurang Mampu'?95:d.ekonomi==='Sedang'?60:30}%"></div></div><span class="w-6 text-right font-bold">${d.ekonomi==='Kurang Mampu'?33:d.ekonomi==='Sedang'?21:10}</span></div>
+        <div class="flex items-center gap-2 text-xs"><span class="w-28 text-slate-500">Wilayah (15%)</span><div class="score-bar flex-1"><div class="score-fill bg-green-400" style="width:80%"></div></div><span class="w-6 text-right font-bold">12</span></div>
+        <div class="flex items-center gap-2 text-xs"><span class="w-28 text-slate-500">Prestasi (10%)</span><div class="score-bar flex-1"><div class="score-fill bg-purple-400" style="width:${d.prestasi!=='—'?100:0}%"></div></div><span class="w-6 text-right font-bold">${d.prestasi!=='—'?10:3}</span></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('detail-modal').classList.remove('hidden');
+}
+
+function closeModal(e) {
+  if(e.target===document.getElementById('detail-modal')) document.getElementById('detail-modal').classList.add('hidden');
+}
+
+function toggleMob() {
+  const m = document.getElementById('mob-menu');
+  if (m) m.classList.toggle('hidden');
+}
+document.addEventListener('click', e => {
+  const m = document.getElementById('mob-menu');
+  if (m && !m.contains(e.target) && !e.target.closest('button[onclick="toggleMob()"]')) m.classList.add('hidden');
+});
+
+// Init
+renderTable(DATA);
+document.getElementById('result-count').textContent = `${DATA.length} dari ${DATA.length}`;
+</script>
+</body>
+</html>

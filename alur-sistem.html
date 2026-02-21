@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMART BEASISWA SULTENG — Alur Sistem</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{sulteng:{50:'#eef4fb',100:'#d5e5f5',200:'#aecaeb',300:'#79a8dd',400:'#4482cc',500:'#1a5eb8',600:'#154fa0',700:'#113f84',800:'#0d306a',900:'#092050'}},fontFamily:{display:['"DM Serif Display"','serif']}}}}</script>
+<style>
+* { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-display { font-family: 'DM Serif Display', serif; }
+.hero-gradient { background: linear-gradient(135deg, #0d306a 0%, #1a5eb8 45%, #2878d4 100%); }
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.fade-up { animation: fadeUp .5s ease both; }
+.step-card { transition: transform .25s, box-shadow .25s; }
+.step-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(13,48,106,.12); }
+.connector { width: 2px; background: linear-gradient(to bottom, #1a5eb8, #79a8dd); flex-shrink: 0; }
+.role-tab.active { background: #0d306a; color: #fff; }
+.role-tab { transition: all .2s; }
+.role-content { display: none; }
+.role-content.active { display: block; animation: fadeUp .3s ease; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.faq-item.open .faq-answer { max-height: 300px; }
+.faq-item.open .faq-icon { transform: rotate(45deg); }
+.faq-icon { transition: transform .25s; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+<!-- NAVBAR -->
+<nav class="hero-gradient text-white shadow-lg sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-xl">🎓</div>
+      <div>
+        <div class="font-display text-base leading-tight">SMART BEASISWA</div>
+        <div class="text-xs text-blue-200 tracking-widest uppercase">Sulawesi Tengah</div>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-1 text-sm font-medium flex-wrap">
+      <a href="index.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">🏠 Beranda</a>
+      <a href="daftar.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">📝 Pendaftaran</a>
+      <a href="rekomendasi-beasiswa.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">🏅 Rekomendasi</a>
+      <a href="basis-data-calon.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">🗂️ Basis Data</a>
+      <a href="alur-sistem.html" class="px-3 py-2 rounded-lg bg-white/20 text-white font-semibold">🔄 Alur Sistem</a>
+      <a href="dashboard-penerima.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">👤 Portal Penerima</a>
+      <a href="verifikator.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">✅ Verifikator</a>
+      <a href="dashboard-pimpinan.html" class="px-3 py-2 rounded-lg hover:bg-white/10 text-blue-100 transition-colors">📊 Pimpinan</a>
+      <a href="login.html" class="ml-1 px-4 py-2 rounded-lg bg-white text-sulteng-700 font-semibold hover:bg-blue-50 transition-colors">🔐 Login</a>
+    </div>
+    <div class="md:hidden relative">
+      <button onclick="document.getElementById('mob-menu').classList.toggle('hidden')" class="text-xs bg-white/20 px-3 py-1.5 rounded-md">☰ Menu</button>
+      <div id="mob-menu" class="hidden absolute right-0 top-10 bg-sulteng-800 rounded-xl shadow-xl min-w-[200px] z-50 text-sm overflow-hidden">
+        <a href="index.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">🏠 Beranda</a>
+        <a href="daftar.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📝 Pendaftaran</a>
+        <a href="rekomendasi-beasiswa.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">🏅 Rekomendasi Beasiswa</a>
+        <a href="basis-data-calon.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">🗂️ Basis Data Calon</a>
+        <a href="alur-sistem.html" class="flex gap-2 px-4 py-3 text-white bg-white/10 font-semibold">🔄 Alur Sistem</a>
+        <a href="dashboard-penerima.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">👤 Portal Penerima</a>
+        <a href="verifikator.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">✅ Verifikator</a>
+        <a href="dashboard-pimpinan.html" class="flex gap-2 px-4 py-3 text-blue-100 hover:bg-white/10">📊 Pimpinan</a>
+        <a href="login.html" class="flex gap-2 px-4 py-3 text-white bg-white/10 font-semibold">🔐 Login</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-gradient text-white pt-16 pb-20 px-4">
+  <div class="max-w-4xl mx-auto text-center fade-up">
+    <div class="inline-flex items-center gap-2 bg-white/15 border border-white/20 rounded-full px-4 py-2 text-sm mb-6">
+      <span class="w-2 h-2 rounded-full bg-blue-300 animate-pulse"></span>
+      Panduan Lengkap Sistem
+    </div>
+    <h1 class="font-display text-4xl md:text-5xl mb-4">Alur Sistem SMART BEASISWA SULTENG</h1>
+    <p class="text-blue-100 text-lg max-w-2xl mx-auto leading-relaxed">
+      Pelajari bagaimana sistem bekerja dari awal pendaftaran hingga pencairan dana dan pemantauan alumni secara end-to-end.
+    </p>
+    <!-- Stats strip -->
+    <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+      <div class="bg-white/10 rounded-2xl p-4 text-center border border-white/10">
+        <div class="text-2xl font-black">7</div>
+        <div class="text-xs text-blue-200 mt-1">Tahapan Utama</div>
+      </div>
+      <div class="bg-white/10 rounded-2xl p-4 text-center border border-white/10">
+        <div class="text-2xl font-black">4</div>
+        <div class="text-xs text-blue-200 mt-1">Peran Pengguna</div>
+      </div>
+      <div class="bg-white/10 rounded-2xl p-4 text-center border border-white/10">
+        <div class="text-2xl font-black">8</div>
+        <div class="text-xs text-blue-200 mt-1">Halaman Portal</div>
+      </div>
+      <div class="bg-white/10 rounded-2xl p-4 text-center border border-white/10">
+        <div class="text-2xl font-black">100%</div>
+        <div class="text-xs text-blue-200 mt-1">Audit Terekam</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN FLOW -->
+<section class="max-w-4xl mx-auto px-4 py-14">
+  <div class="text-center mb-12">
+    <h2 class="text-2xl font-bold text-slate-800 mb-2">Alur Langkah demi Langkah</h2>
+    <p class="text-slate-500 text-sm">Klik kartu untuk melihat detail setiap tahapan</p>
+  </div>
+
+  <div class="space-y-0" id="flow-container">
+
+    <!-- TAHAP 1 -->
+    <div class="flex gap-4 items-start">
+      <div class="flex flex-col items-center flex-shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-sulteng-600 text-white flex items-center justify-center text-xl shadow-lg">🌐</div>
+        <div class="connector h-24 mt-2"></div>
+      </div>
+      <div class="step-card bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex-1 mb-2 cursor-pointer" onclick="toggleDetail('d1')">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-sulteng-500 font-semibold uppercase tracking-wider mb-1">Tahap 1</div>
+            <h3 class="font-bold text-slate-800 text-lg">Eksplorasi & Perencanaan</h3>
+            <p class="text-slate-500 text-sm mt-1">Calon peserta mempelajari program beasiswa yang tersedia.</p>
+          </div>
+          <div class="text-slate-300 text-xl ml-4">▸</div>
+        </div>
+        <div id="d1" class="hidden mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-sulteng-50 rounded-xl p-3">
+            <div class="font-semibold text-sulteng-700 mb-1">📄 Halaman Terkait</div>
+            <a href="index.html" class="text-sulteng-600 hover:underline block">→ index.html (Beranda)</a>
+            <a href="rekomendasi-beasiswa.html" class="text-sulteng-600 hover:underline block">→ rekomendasi-beasiswa.html</a>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3">
+            <div class="font-semibold text-slate-700 mb-1">✅ Aktivitas</div>
+            <ul class="text-slate-500 space-y-1">
+              <li>• Melihat program beasiswa per dinas</li>
+              <li>• Mengecek jurusan yang dibutuhkan</li>
+              <li>• Membaca syarat dan kuota</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAHAP 2 -->
+    <div class="flex gap-4 items-start">
+      <div class="flex flex-col items-center flex-shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-blue-500 text-white flex items-center justify-center text-xl shadow-lg">📝</div>
+        <div class="connector h-24 mt-2"></div>
+      </div>
+      <div class="step-card bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex-1 mb-2 cursor-pointer" onclick="toggleDetail('d2')">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-blue-500 font-semibold uppercase tracking-wider mb-1">Tahap 2</div>
+            <h3 class="font-bold text-slate-800 text-lg">Pendaftaran & Unggah Dokumen</h3>
+            <p class="text-slate-500 text-sm mt-1">Peserta mengisi formulir dan mengunggah seluruh berkas persyaratan.</p>
+          </div>
+          <div class="text-slate-300 text-xl ml-4">▸</div>
+        </div>
+        <div id="d2" class="hidden mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-blue-50 rounded-xl p-3">
+            <div class="font-semibold text-blue-700 mb-1">📄 Halaman Terkait</div>
+            <a href="daftar.html" class="text-blue-600 hover:underline block">→ daftar.html (Form Pendaftaran)</a>
+            <a href="login.html" class="text-blue-600 hover:underline block">→ login.html (Login Peserta)</a>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3">
+            <div class="font-semibold text-slate-700 mb-1">📋 Dokumen Wajib</div>
+            <ul class="text-slate-500 space-y-1">
+              <li>• KTP & Kartu Keluarga</li>
+              <li>• Surat Aktif Kuliah/Sekolah</li>
+              <li>• Transkrip / Rapor terakhir</li>
+              <li>• Surat Keterangan Penghasilan</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAHAP 3 -->
+    <div class="flex gap-4 items-start">
+      <div class="flex flex-col items-center flex-shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-500 text-white flex items-center justify-center text-xl shadow-lg">🤖</div>
+        <div class="connector h-24 mt-2"></div>
+      </div>
+      <div class="step-card bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex-1 mb-2 cursor-pointer" onclick="toggleDetail('d3')">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-indigo-500 font-semibold uppercase tracking-wider mb-1">Tahap 3</div>
+            <h3 class="font-bold text-slate-800 text-lg">Validasi & Skor Rekomendasi Sistem</h3>
+            <p class="text-slate-500 text-sm mt-1">Sistem memvalidasi NIK via Dukcapil dan menghitung skor rekomendasi otomatis.</p>
+          </div>
+          <div class="text-slate-300 text-xl ml-4">▸</div>
+        </div>
+        <div id="d3" class="hidden mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-indigo-50 rounded-xl p-3">
+            <div class="font-semibold text-indigo-700 mb-1">📄 Halaman Terkait</div>
+            <a href="basis-data-calon.html" class="text-indigo-600 hover:underline block">→ basis-data-calon.html</a>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3">
+            <div class="font-semibold text-slate-700 mb-1">⚙️ Komponen Skor</div>
+            <ul class="text-slate-500 space-y-1">
+              <li>• IPK / Nilai Akademik (40%)</li>
+              <li>• Kategori Ekonomi (30%)</li>
+              <li>• Wilayah / Domisili (20%)</li>
+              <li>• Prestasi & Organisasi (10%)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAHAP 4 -->
+    <div class="flex gap-4 items-start">
+      <div class="flex flex-col items-center flex-shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-yellow-500 text-white flex items-center justify-center text-xl shadow-lg">✅</div>
+        <div class="connector h-24 mt-2"></div>
+      </div>
+      <div class="step-card bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex-1 mb-2 cursor-pointer" onclick="toggleDetail('d4')">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-yellow-600 font-semibold uppercase tracking-wider mb-1">Tahap 4</div>
+            <h3 class="font-bold text-slate-800 text-lg">Verifikasi & Seleksi oleh Operator</h3>
+            <p class="text-slate-500 text-sm mt-1">Verifikator memeriksa kelengkapan dokumen dan membuat keputusan seleksi.</p>
+          </div>
+          <div class="text-slate-300 text-xl ml-4">▸</div>
+        </div>
+        <div id="d4" class="hidden mt-4 pt-4 border-t border-slate-100 space-y-3 text-sm">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-green-50 border border-green-100 rounded-xl p-3 text-center">
+              <div class="text-2xl mb-1">✅</div>
+              <div class="font-semibold text-green-700">Disetujui</div>
+              <div class="text-xs text-green-600 mt-1">Lanjut ke review pimpinan</div>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-100 rounded-xl p-3 text-center">
+              <div class="text-2xl mb-1">⏳</div>
+              <div class="font-semibold text-yellow-700">Pending</div>
+              <div class="text-xs text-yellow-600 mt-1">Peserta diminta melengkapi berkas</div>
+            </div>
+            <div class="bg-red-50 border border-red-100 rounded-xl p-3 text-center">
+              <div class="text-2xl mb-1">❌</div>
+              <div class="font-semibold text-red-700">Ditolak</div>
+              <div class="text-xs text-red-500 mt-1">Tidak memenuhi syarat</div>
+            </div>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3">
+            <div class="font-semibold text-slate-700 mb-1">📄 Halaman Terkait</div>
+            <a href="verifikator.html" class="text-sulteng-600 hover:underline">→ verifikator.html (Panel Verifikator)</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAHAP 5 -->
+    <div class="flex gap-4 items-start">
+      <div class="flex flex-col items-center flex-shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-xl shadow-lg">📊</div>
+        <div class="connector h-24 mt-2"></div>
+      </div>
+      <div class="step-card bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex-1 mb-2 cursor-pointer" onclick="toggleDetail('d5')">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-purple-500 font-semibold uppercase tracking-wider mb-1">Tahap 5</div>
+            <h3 class="font-bold text-slate-800 text-lg">Review & Penetapan oleh Pimpinan</h3>
+            <p class="text-slate-500 text-sm mt-1">Pimpinan melihat analitik provinsi dan menetapkan daftar penerima resmi.</p>
+          </div>
+          <div class="text-slate-300 text-xl ml-4">▸</div>
+        </div>
+        <div id="d5" class="hidden mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-purple-50 rounded-xl p-3">
+            <div class="font-semibold text-purple-700 mb-1">📄 Halaman Terkait</div>
+            <a href="dashboard-pimpinan.html" class="text-purple-600 hover:underline block">→ dashboard-pimpinan.html</a>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3">
+            <div class="font-semibold text-slate-700 mb-1">🔍 Fitur Pimpinan</div>
+            <ul class="text-slate-500 space-y-1">
+              <li>• Analitik per wilayah & sektor</li>
+              <li>• Peta distribusi penerima</li>
+              <li>• Kesesuaian target RPJMD</li>
+              <li>• Audit trail seluruh keputusan</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAHAP 6 -->
+    <div class="flex gap-4 items-start">
+      <div class="flex flex-col items-center flex-shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-green-600 text-white flex items-center justify-center text-xl shadow-lg">💳</div>
+        <div class="connector h-24 mt-2"></div>
+      </div>
+      <div class="step-card bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex-1 mb-2 cursor-pointer" onclick="toggleDetail('d6')">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-green-600 font-semibold uppercase tracking-wider mb-1">Tahap 6</div>
+            <h3 class="font-bold text-slate-800 text-lg">Monitoring Aktif & Pencairan Dana</h3>
+            <p class="text-slate-500 text-sm mt-1">Penerima aktif dimonitoring setiap semester melalui Early Warning System.</p>
+          </div>
+          <div class="text-slate-300 text-xl ml-4">▸</div>
+        </div>
+        <div id="d6" class="hidden mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-green-50 rounded-xl p-3">
+            <div class="font-semibold text-green-700 mb-1">📄 Halaman Terkait</div>
+            <a href="dashboard-penerima.html" class="text-green-700 hover:underline block">→ dashboard-penerima.html</a>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3">
+            <div class="font-semibold text-slate-700 mb-1">⚠️ Early Warning System</div>
+            <ul class="text-slate-500 space-y-1">
+              <li>• Wajib unggah KHS tiap semester</li>
+              <li>• IPK minimum 2.75 dipertahankan</li>
+              <li>• Notifikasi otomatis jika berisiko</li>
+              <li>• Dana cair jika semua syarat terpenuhi</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAHAP 7 -->
+    <div class="flex gap-4 items-start">
+      <div class="flex flex-col items-center flex-shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-teal-600 text-white flex items-center justify-center text-xl shadow-lg">🎓</div>
+      </div>
+      <div class="step-card bg-white border border-sulteng-100 rounded-2xl p-5 shadow-sm flex-1 mb-2 cursor-pointer ring-2 ring-sulteng-200" onclick="toggleDetail('d7')">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-teal-600 font-semibold uppercase tracking-wider mb-1">Tahap 7 — Final</div>
+            <h3 class="font-bold text-slate-800 text-lg">Tracking Alumni Pasca-Studi</h3>
+            <p class="text-slate-500 text-sm mt-1">Alumni wajib memperbarui data tempat kerja untuk mengukur dampak nyata program.</p>
+          </div>
+          <div class="text-slate-300 text-xl ml-4">▸</div>
+        </div>
+        <div id="d7" class="hidden mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-teal-50 rounded-xl p-3">
+            <div class="font-semibold text-teal-700 mb-1">📄 Halaman Terkait</div>
+            <a href="dashboard-penerima.html" class="text-teal-700 hover:underline block">→ dashboard-penerima.html (Data Alumni)</a>
+            <a href="dashboard-pimpinan.html" class="text-teal-700 hover:underline block">→ dashboard-pimpinan.html (Tracking Alumni)</a>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-3">
+            <div class="font-semibold text-slate-700 mb-1">📊 Data yang Dikumpulkan</div>
+            <ul class="text-slate-500 space-y-1">
+              <li>• Instansi / perusahaan tempat kerja</li>
+              <li>• Bidang kerja & lokasi</li>
+              <li>• Status: bekerja / wirausaha / studi lanjut</li>
+              <li>• Diperbarui setiap 6 bulan</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end flow -->
+</section>
+
+<!-- PERAN PENGGUNA -->
+<section class="bg-white border-t border-b border-slate-100 py-14 px-4">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl font-bold text-slate-800 mb-2">Peran Pengguna dalam Sistem</h2>
+      <p class="text-slate-500 text-sm">Setiap peran memiliki akses dan tanggung jawab yang berbeda</p>
+    </div>
+    <!-- Tabs -->
+    <div class="flex flex-wrap gap-2 mb-8 justify-center">
+      <button class="role-tab active px-5 py-2.5 rounded-xl text-sm font-semibold border border-slate-200" onclick="switchRole('pendaftar', this)">📝 Pendaftar</button>
+      <button class="role-tab px-5 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50" onclick="switchRole('penerima', this)">👤 Penerima</button>
+      <button class="role-tab px-5 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50" onclick="switchRole('verifikator', this)">✅ Verifikator</button>
+      <button class="role-tab px-5 py-2.5 rounded-xl text-sm font-semibold border border-slate-200 text-slate-600 hover:bg-slate-50" onclick="switchRole('pimpinan', this)">📊 Pimpinan</button>
+    </div>
+
+    <div id="role-pendaftar" class="role-content active">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-blue-50 rounded-2xl p-5 border border-blue-100">
+          <div class="text-3xl mb-3">📝</div>
+          <h4 class="font-bold text-slate-800 mb-2">Pendaftar / Calon Peserta</h4>
+          <p class="text-slate-500 text-sm">Siswa SMA/SMK atau mahasiswa S1/S2 yang ingin mendaftar beasiswa Pemprov Sulteng.</p>
+        </div>
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 col-span-2">
+          <h4 class="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wider">Yang Bisa Dilakukan</h4>
+          <ul class="space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2"><span class="text-blue-500 font-bold">✓</span> Melihat program beasiswa yang tersedia</li>
+            <li class="flex gap-2"><span class="text-blue-500 font-bold">✓</span> Mengisi formulir pendaftaran online</li>
+            <li class="flex gap-2"><span class="text-blue-500 font-bold">✓</span> Mengunggah dokumen persyaratan</li>
+            <li class="flex gap-2"><span class="text-blue-500 font-bold">✓</span> Memantau status seleksi secara real-time</li>
+            <li class="flex gap-2"><span class="text-blue-500 font-bold">✓</span> Melengkapi dokumen jika diminta verifikator</li>
+          </ul>
+          <a href="daftar.html" class="inline-block mt-4 bg-sulteng-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-sulteng-700 transition-colors">Mulai Daftar →</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="role-penerima" class="role-content">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-green-50 rounded-2xl p-5 border border-green-100">
+          <div class="text-3xl mb-3">👤</div>
+          <h4 class="font-bold text-slate-800 mb-2">Penerima Aktif</h4>
+          <p class="text-slate-500 text-sm">Peserta yang telah ditetapkan sebagai penerima beasiswa dan sedang masa studi aktif.</p>
+        </div>
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 col-span-2">
+          <h4 class="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wider">Yang Bisa Dilakukan</h4>
+          <ul class="space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Melihat status & skor seleksi</li>
+            <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Mengunggah KHS tiap semester</li>
+            <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Memantau riwayat pencairan dana</li>
+            <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Melihat notifikasi Early Warning System</li>
+            <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Memperbarui data pasca-studi (alumni)</li>
+          </ul>
+          <a href="dashboard-penerima.html" class="inline-block mt-4 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">Buka Portal →</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="role-verifikator" class="role-content">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-yellow-50 rounded-2xl p-5 border border-yellow-100">
+          <div class="text-3xl mb-3">✅</div>
+          <h4 class="font-bold text-slate-800 mb-2">Verifikator</h4>
+          <p class="text-slate-500 text-sm">Operator dinas provinsi/kabupaten yang bertugas memverifikasi kelengkapan berkas pendaftaran.</p>
+        </div>
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 col-span-2">
+          <h4 class="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wider">Yang Bisa Dilakukan</h4>
+          <ul class="space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2"><span class="text-yellow-600 font-bold">✓</span> Melihat antrian pendaftar</li>
+            <li class="flex gap-2"><span class="text-yellow-600 font-bold">✓</span> Menyetujui, menunda, atau menolak pendaftar</li>
+            <li class="flex gap-2"><span class="text-yellow-600 font-bold">✓</span> Mengirim notifikasi ke pendaftar pending</li>
+            <li class="flex gap-2"><span class="text-yellow-600 font-bold">✓</span> Memantau Early Warning System penerima aktif</li>
+            <li class="flex gap-2"><span class="text-yellow-600 font-bold">✓</span> Melihat laporan kinerja verifikasi</li>
+          </ul>
+          <a href="verifikator.html" class="inline-block mt-4 bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700 transition-colors">Buka Panel →</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="role-pimpinan" class="role-content">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-purple-50 rounded-2xl p-5 border border-purple-100">
+          <div class="text-3xl mb-3">📊</div>
+          <h4 class="font-bold text-slate-800 mb-2">Pimpinan / Asisten</h4>
+          <p class="text-slate-500 text-sm">Kepala Dinas atau Asisten Pemerintahan yang memiliki akses analytics menyeluruh.</p>
+        </div>
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100 col-span-2">
+          <h4 class="font-semibold text-slate-700 mb-3 text-sm uppercase tracking-wider">Yang Bisa Dilakukan</h4>
+          <ul class="space-y-2 text-sm text-slate-600">
+            <li class="flex gap-2"><span class="text-purple-600 font-bold">✓</span> Analitik distribusi penerima per wilayah & sektor</li>
+            <li class="flex gap-2"><span class="text-purple-600 font-bold">✓</span> Memantau peta sebaran penerima antar kabupaten</li>
+            <li class="flex gap-2"><span class="text-purple-600 font-bold">✓</span> Evaluasi kesesuaian dengan target RPJMD</li>
+            <li class="flex gap-2"><span class="text-purple-600 font-bold">✓</span> Tracking alumni & dampak nyata beasiswa</li>
+            <li class="flex gap-2"><span class="text-purple-600 font-bold">✓</span> Mengunduh audit trail lengkap</li>
+          </ul>
+          <a href="dashboard-pimpinan.html" class="inline-block mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">Buka Dashboard →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="max-w-3xl mx-auto px-4 py-14">
+  <div class="text-center mb-10">
+    <h2 class="text-2xl font-bold text-slate-800 mb-2">Pertanyaan Umum</h2>
+    <p class="text-slate-500 text-sm">Hal-hal yang sering ditanyakan tentang sistem ini</p>
+  </div>
+  <div class="space-y-3" id="faq-list">
+    <div class="faq-item bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <button class="w-full text-left px-5 py-4 flex items-center justify-between font-semibold text-slate-800 text-sm hover:bg-slate-50" onclick="toggleFaq(this)">
+        Berapa lama proses seleksi berlangsung?
+        <span class="faq-icon text-sulteng-500 font-bold text-lg flex-shrink-0 ml-4">+</span>
+      </button>
+      <div class="faq-answer px-5 pb-4 text-sm text-slate-500 leading-relaxed">Proses seleksi rata-rata berlangsung 14–21 hari kerja setelah berkas dinyatakan lengkap oleh verifikator. Peserta dapat memantau status secara real-time melalui dashboard penerima.</div>
+    </div>
+    <div class="faq-item bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <button class="w-full text-left px-5 py-4 flex items-center justify-between font-semibold text-slate-800 text-sm hover:bg-slate-50" onclick="toggleFaq(this)">
+        Apa yang terjadi jika IPK saya turun di bawah 2.75?
+        <span class="faq-icon text-sulteng-500 font-bold text-lg flex-shrink-0 ml-4">+</span>
+      </button>
+      <div class="faq-answer px-5 pb-4 text-sm text-slate-500 leading-relaxed">Sistem akan secara otomatis mengirimkan peringatan (Early Warning) kepada Anda dan operator kabupaten/kota. Pencairan dana semester berikutnya akan ditangguhkan sementara hingga ada klarifikasi. Jika IPK turun dua semester berturut-turut, kasus akan dievaluasi oleh verifikator.</div>
+    </div>
+    <div class="faq-item bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <button class="w-full text-left px-5 py-4 flex items-center justify-between font-semibold text-slate-800 text-sm hover:bg-slate-50" onclick="toggleFaq(this)">
+        Bagaimana skor rekomendasi dihitung?
+        <span class="faq-icon text-sulteng-500 font-bold text-lg flex-shrink-0 ml-4">+</span>
+      </button>
+      <div class="faq-answer px-5 pb-4 text-sm text-slate-500 leading-relaxed">Skor dihitung dari empat komponen: IPK/Nilai Akademik (40%), Kategori Ekonomi berdasarkan PKH/DTKS (30%), Wilayah/Domisili khususnya daerah tertinggal (20%), dan Prestasi serta keterlibatan organisasi (10%). Skor 0–100 ini membantu verifikator dalam menentukan prioritas.</div>
+    </div>
+    <div class="faq-item bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <button class="w-full text-left px-5 py-4 flex items-center justify-between font-semibold text-slate-800 text-sm hover:bg-slate-50" onclick="toggleFaq(this)">
+        Apakah pendaftaran bisa dilakukan dari luar Sulawesi Tengah?
+        <span class="faq-icon text-sulteng-500 font-bold text-lg flex-shrink-0 ml-4">+</span>
+      </button>
+      <div class="faq-answer px-5 pb-4 text-sm text-slate-500 leading-relaxed">Ya, pendaftaran dapat dilakukan secara online dari mana saja. Namun, prioritas utama diberikan kepada pendaftar yang berdomisili di Sulawesi Tengah dan berasal dari keluarga yang masuk dalam data DTKS/PKH Pemprov Sulteng.</div>
+    </div>
+    <div class="faq-item bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <button class="w-full text-left px-5 py-4 flex items-center justify-between font-semibold text-slate-800 text-sm hover:bg-slate-50" onclick="toggleFaq(this)">
+        Apa kewajiban alumni setelah lulus?
+        <span class="faq-icon text-sulteng-500 font-bold text-lg flex-shrink-0 ml-4">+</span>
+      </button>
+      <div class="faq-answer px-5 pb-4 text-sm text-slate-500 leading-relaxed">Alumni wajib memperbarui data tempat kerja, bidang kerja, dan lokasi setiap 6 bulan melalui portal penerima. Data ini digunakan untuk mengukur dampak nyata program terhadap pembangunan SDM Sulawesi Tengah dan menjadi bahan evaluasi kebijakan beasiswa ke depan.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="hero-gradient text-white py-14 px-4">
+  <div class="max-w-2xl mx-auto text-center">
+    <h2 class="font-display text-3xl mb-4">Siap Memulai?</h2>
+    <p class="text-blue-100 mb-8">Daftar sekarang dan manfaatkan peluang beasiswa dari Pemerintah Provinsi Sulawesi Tengah.</p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="rekomendasi-beasiswa.html" class="px-6 py-3 bg-white/20 border border-white/30 text-white rounded-xl font-semibold hover:bg-white/30 transition-colors">🏅 Lihat Program Beasiswa</a>
+      <a href="daftar.html" class="px-6 py-3 bg-white text-sulteng-700 rounded-xl font-semibold hover:bg-blue-50 transition-colors">📝 Daftar Sekarang →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-sulteng-900 text-blue-200 text-center py-5 text-xs">
+  © 2026 Pemerintah Provinsi Sulawesi Tengah — Dinas Pendidikan & Kebudayaan
+</footer>
+
+<script>
+function toggleDetail(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('hidden');
+}
+
+function switchRole(role, btn) {
+  document.querySelectorAll('.role-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.role-tab').forEach(t => {
+    t.classList.remove('active');
+    t.classList.add('text-slate-600');
+    t.classList.remove('text-white');
+  });
+  document.getElementById('role-' + role).classList.add('active');
+  btn.classList.add('active');
+  btn.classList.remove('text-slate-600');
+}
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>

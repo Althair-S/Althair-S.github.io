@@ -22,16 +22,20 @@ SMART BEASISWA SULTENG adalah prototipe antarmuka (UI prototype) sistem manajeme
 |------|-----------|
 | `index.html` | Beranda / Landing Page publik |
 | `daftar.html` | Form pendaftaran akun peserta |
-| `login.html` | Halaman login |
+| `login.html` | Halaman login multi-role |
+| `rekomendasi-beasiswa.html` | Katalog rekomendasi program beasiswa per dinas & jurusan |
+| `basis-data-calon.html` | Basis data calon penerima + skor rekomendasi sistem |
+| `alur-sistem.html` | Penjelasan interaktif alur kerja sistem end-to-end |
 | `dashboard-penerima.html` | Portal penerima beasiswa (sebelum & sesudah diterima) |
 | `verifikator.html` | Panel verifikator untuk proses seleksi |
 | `dashboard-pimpinan.html` | Dashboard analitik untuk pimpinan/Asisten |
-| `smart-beasiswa-sulteng.html` | Halaman dokumentasi lengkap sistem |
 
 ---
 
 ## ✨ Fitur Utama
 
+- **Rekomendasi Beasiswa** — Katalog program beasiswa per dinas & bidang studi yang dibutuhkan
+- **Basis Data Calon** — Database kandidat dengan skor rekomendasi otomatis (IPK, ekonomi, wilayah, prestasi)
 - **Validasi Dukcapil Real-time** — Sinkronisasi data NIK secara otomatis
 - **Dashboard Analitik Interaktif** — Data penerima beasiswa real-time per wilayah & sektor
 - **Early Warning System (EWS)** — Peringatan otomatis untuk penerima berisiko (IPK turun, tidak aktif)
@@ -41,14 +45,39 @@ SMART BEASISWA SULTENG adalah prototipe antarmuka (UI prototype) sistem manajeme
 
 ---
 
-## 🗂️ Alur Sistem
+## 🗂️ Alur Sistem Lengkap
 
-```
-Mahasiswa Daftar → Unggah Dokumen → Verifikator Seleksi → Pimpinan Review
-      ↓                                       ↓
-Dashboard Penerima                    Audit Trail Terekam
-      ↓
-  EWS Monitoring → Tracking Alumni
+```mermaid
+flowchart TD
+    A([Publik / Calon Peserta]) --> B["index.html\nBeranda"]
+    B --> C["rekomendasi-beasiswa.html\nLihat Program Beasiswa\nper Dinas & Jurusan"]
+    B --> D["daftar.html\nPendaftaran Akun"]
+    D --> E["Unggah Dokumen\nKTP, KK, Transkrip, dll"]
+    E --> F{"Validasi\nDukcapil"}
+    F -- Valid --> G["basis-data-calon.html\nMasuk Basis Data Calon\n+ Skor Rekomendasi Sistem"]
+    F -- Gagal --> D
+
+    G --> H["login.html\nLogin Verifikator"]
+    H --> I["verifikator.html\nSeleksi & Verifikasi"]
+    I --> J{"Keputusan\nVerifikator"}
+    J -- Disetujui --> K["login.html\nLogin Pimpinan"]
+    J -- Pending --> L["Notif ke Calon\nLengkapi Dokumen"]
+    J -- Ditolak --> M(["Selesai - Tidak Lolos"])
+    L --> I
+
+    K --> N["dashboard-pimpinan.html\nReview Analitik Provinsi"]
+    N --> O(["Penetapan Penerima Resmi"])
+    O --> P["login.html\nLogin Penerima"]
+    P --> Q["dashboard-penerima.html\nPortal Penerima Aktif"]
+    Q --> R["Unggah KHS Tiap Semester"]
+    R --> S{"EWS: IPK\n>= 2.75?"}
+    S -- Aman --> T["Pencairan Dana\nSemester Berikutnya"]
+    T --> R
+    S -- Peringatan --> U["Notif Otomatis\nke Penerima & Operator"]
+    U --> R
+
+    Q --> V(["Alumni: Update\nData Pasca-Studi"])
+    N --> W["Audit Trail\nSemua Aksi Terekam"]
 ```
 
 ---
@@ -59,9 +88,11 @@ Dashboard Penerima                    Audit Trail Terekam
 |-------|-------------|------------------------|
 | Cakupan | Fokus pendaftaran | End-to-end system |
 | Data | Statis | Dinamis & real-time |
-| Tracking Alumni | ✕ Tidak ada | ✓ Ada |
+| Rekomendasi Beasiswa | Tidak ada | Per dinas & jurusan |
+| Basis Data Calon | Manual | Skor rekomendasi otomatis |
+| Tracking Alumni | Tidak ada | Ada |
 | Monitoring | Manual | Dashboard analitik |
-| Early Warning | ✕ Tidak ada | ✓ Otomatis |
+| Early Warning | Tidak ada | Otomatis |
 
 ---
 
@@ -70,6 +101,7 @@ Dashboard Penerima                    Audit Trail Terekam
 - **HTML5** & **Tailwind CSS** (via CDN)
 - **Google Fonts** — Plus Jakarta Sans & DM Serif Display
 - **Vanilla JavaScript** — interaksi UI tanpa framework
+- **Chart.js** — visualisasi data analitik
 - **GitHub Pages** — hosting static
 
 ---
@@ -80,7 +112,7 @@ Cukup buka file `index.html` di browser. Tidak ada dependensi yang perlu diinsta
 
 ```bash
 # Atau gunakan Live Server (VS Code extension)
-# Klik kanan index.html → Open with Live Server
+# Klik kanan index.html -> Open with Live Server
 ```
 
 ---
