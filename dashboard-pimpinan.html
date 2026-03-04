@@ -107,8 +107,8 @@
       <h3 class="font-semibold text-slate-800 mb-1">Jenis Kelamin</h3>
       <canvas id="donutChart" height="160"></canvas>
       <div class="flex justify-center gap-4 mt-3 text-xs text-slate-500">
-        <span><span class="inline-block w-2.5 h-2.5 rounded-full bg-sulteng-500 mr-1"></span>Perempuan 58%</span>
-        <span><span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-300 mr-1"></span>Laki-laki 42%</span>
+        <span><span class="inline-block w-2.5 h-2.5 rounded-full mr-1" style="background:#ec4899"></span>Perempuan 58%</span>
+        <span><span class="inline-block w-2.5 h-2.5 rounded-full mr-1" style="background:#1a5eb8"></span>Laki-laki 42%</span>
       </div>
     </div>
   </div>
@@ -347,13 +347,13 @@ window.addEventListener('load', function() {
     type: 'bar',
     data: {
       labels: ['Pertanian', 'Teknik', 'Kesehatan', 'Pendidikan', 'Ekonomi', 'Lainnya'],
-      datasets: [{ label: 'Penerima', data: [4292, 6438, 5246, 2861, 2384, 2624], backgroundColor: ['#154fa0','#1a5eb8','#2878d4','#4482cc','#79a8dd','#aecaeb'], borderRadius: 6 }]
+      datasets: [{ label: 'Penerima', data: [4292, 6438, 5246, 2861, 2384, 2624], backgroundColor: ['#22c55e','#3b82f6','#ef4444','#a855f7','#f97316','#14b8a6'], borderRadius: 6 }]
     },
     options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => v >= 1000 ? (v/1000).toFixed(1)+'K' : v } }, x: { grid: { display: false } } } }
   });
   new Chart(document.getElementById('donutChart'), {
     type: 'doughnut',
-    data: { labels: ['Perempuan','Laki-laki'], datasets: [{ data: [58, 42], backgroundColor: ['#1a5eb8','#79a8dd'], borderWidth: 0, hoverOffset: 4 }] },
+    data: { labels: ['Perempuan','Laki-laki'], datasets: [{ data: [58, 42], backgroundColor: ['#ec4899','#1a5eb8'], borderWidth: 0, hoverOffset: 4 }] },
     options: { responsive: true, cutout: '72%', plugins: { legend: { display: false } } }
   });
 });
